@@ -2,6 +2,7 @@ import arg from 'arg';
 import help from './help';
 
 function parseArgumentsIntoOptions(rawArgs) {
+  // for debug
   console.log(rawArgs);
   const args = arg({
     '--denom': String,
@@ -28,6 +29,7 @@ function parseArgumentsIntoOptions(rawArgs) {
 
 export function cli(args) {
   const options = parseArgumentsIntoOptions(args);
+  // for debug
   console.log(options);
   if(options.help) {
     help();

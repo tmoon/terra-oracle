@@ -1,7 +1,7 @@
 // import arg from 'arg';
 const arg = require('arg');
 const { help } = require('./help');
-const { run } = require('./run.js');
+const { addDaemon, removeDaemon } = require('./run.js');
 
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg({
@@ -33,7 +33,9 @@ module.exports = {
     if (options.help) {
       help();
     } else if (options.command === 'run') {
-      run(options);
+      addDaemon(options);
+    } else if (options.command === 'rm') {
+      removeDaemon();
     }
   },
 };

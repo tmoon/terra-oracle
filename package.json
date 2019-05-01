@@ -1,0 +1,32 @@
+{
+  "name": "oracle",
+  "version": "1.0.0",
+  "description": "Currency fetching and voting cli",
+  "main": "src/cli.js",
+  "bin": {
+    "oracle": "bin/oracle"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "cli",
+    "terra-oracle"
+  ],
+  "author": "covalent",
+  "license": "ISC",
+  "dependencies": {
+    "arg": "^4.1.0",
+    "esm": "^3.2.22",
+    "inquirer": "^6.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "mocha": "^6.1.4"
+  }
+}

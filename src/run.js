@@ -13,11 +13,22 @@ module.exports = {
     console.log(process.cwd());
     if (options.interval === undefined) {
       throw Error('interval is necessary for run command');
+      // Output with chalk
     }
+
+    // CRON schedule format:
+    // # ┌────────────── second (optional)
+    // # │ ┌──────────── minute
+    // # │ │ ┌────────── hour
+    // # │ │ │ ┌──────── day of month
+    // # │ │ │ │ ┌────── month
+    // # │ │ │ │ │ ┌──── day of week
+    // # │ │ │ │ │ │
+    // # │ │ │ │ │ │
+    // # * * * * * *
 
     cron.schedule(`* */${options.interval} * * *`, async () => {
       await fetchWithFallback(['ust']);
-      console.log('bokkor');
       // TODO vote
     });
     console.log('done');
@@ -38,12 +49,12 @@ module.exports = {
         if (resp.stderr !== '') {
           return Promise.reject(Error('Install node'));
         }
-        console.log('paisi ', resp.stdout.trim());
+        console.log('Found ', resp.stdout.trim());
         serviceConfig['engine.bin'] = resp.stdout.trim();
         return service.add(serviceConfig);
       }).then((success) => {
         console.log('successfully added service ', success);
-        return exec('sudo service oracle start');
+        return exec(`service ${serviceConfig.name} start`);
       }).then((success) => {
         console.log('successfully start service ', success);
       })

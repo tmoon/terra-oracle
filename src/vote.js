@@ -1,4 +1,5 @@
 const EXEC = require('child_process').exec;
+const chalk = require('chalk');
 const VOTER = require('../config/voter.json');
 const { CLI_CURRENCY_MAP } = require('../config/constant.json');
 
@@ -39,10 +40,10 @@ module.exports = {
 
     EXEC(command, (error, stdOut, stdErr) => {
       if (stdErr !== null) {
-        throw new Error(stdErr);
+        console.log(chalk.red(stdErr));
       }
       if (error !== null) {
-        throw new Error(error);
+        console.log(chalk.red(error));
       }
       return {
         status: 'succeed',

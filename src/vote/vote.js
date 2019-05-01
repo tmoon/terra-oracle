@@ -29,6 +29,9 @@ module.exports = {
       if (error !== null) {
         throw new Error(error);
       }
+      return {
+        status: 'succeed',
+      };
     });
   },
 };

@@ -31,7 +31,7 @@ module.exports = {
     if (typeof (voteParam.price) !== 'number') {
       return {
         status: 'error',
-        message: '"price" flag is missed in command',
+        message: '"price" must be number',
       };
     }
 

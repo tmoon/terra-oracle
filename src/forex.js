@@ -81,8 +81,7 @@ const InternalFunctions = {
       const finalFXData = {};
       for (let i = denoms.length - 1; i >= 0; i -= 1) {
         const denom = denoms[i];
-        const currencyName = config.FX_CURRENCY_MAP[denom];
-        finalFXData[currencyName] = InternalFunctions.parseAPIData(data, denomToKey[denom], apiNum);
+        finalFXData[denom] = InternalFunctions.parseAPIData(data, denomToKey[denom], apiNum);
       }
 
       return { parsedFXData: finalFXData, error: false };

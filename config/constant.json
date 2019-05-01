@@ -1,5 +1,5 @@
 {
-    "CURRENCY_MAP" : {
+    "CLI_CURRENCY_MAP" : {
         "usd": "uusd",
         "krw": "ukrw",
         "sdr": "usdr",

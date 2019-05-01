@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-// const service = require('service-systemd');
+const service = require('service-systemd');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 

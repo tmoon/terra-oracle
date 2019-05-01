@@ -7,5 +7,8 @@
         "jpy": "ujpy",
         "eur": "ueur",
         "gbp": "ugbp"
+    },
+    "FETCH_APIS" : {
+        "BASE_API" : "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=KRW,USD,JPY,GBP,EUR,CNY&api_key=850ae1aa37dc6215895fa80c23bb808c79472181e001eefce8365ef8a26b394c"
     }
 }

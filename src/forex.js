@@ -91,14 +91,14 @@ const InternalFunctions = {
 };
 
 async function getForexRates(denoms) {
-  let promises = [];
-  for(var i = 0; i < 3; i += 1){
+  const promises = [];
+  for (let i = 0; i < 3; i += 1) {
     promises.push(InternalFunctions.getAPIData(denoms, i));
   }
-  let res = await Promise.all(promises);
+  const res = await Promise.all(promises);
   return res;
 }
 
 module.exports = {
   getForexRates,
-};
+}; 

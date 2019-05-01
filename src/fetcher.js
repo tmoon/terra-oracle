@@ -13,9 +13,12 @@ const exchanges = {
 };
 /* eslint-enable */
 
+/* In future, if LUNA is exchanged in some of the exchanges it would be sufficient 
+* to change this flag */
 const LUNA = 'ETH';
 
 const InternalFunctions = {
+  // checks to make sure only active/valid denominations are taken
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
@@ -27,6 +30,7 @@ const InternalFunctions = {
     return newDenoms;
   },
 
+  // pull relevant currency exchange rate using ccxt
   async getRateByExchange(exchange, currency) {
     let rate;
     try {
@@ -41,6 +45,7 @@ const InternalFunctions = {
     };
   },
 
+  // compute median
   getMedian(numbers) {
     const sorted = numbers.slice().sort();
     const middle = Math.floor(sorted.length / 2);
@@ -50,12 +55,14 @@ const InternalFunctions = {
     return sorted[middle];
   },
 
+  // get median values for USD to major foreign currency rates
   async getForexExchangeRates(denoms) {
     const exchangeRates = await forex.getForexRates(denoms);
     const medianRates = {};
     for (let i = 0; i < denoms.length; i += 1) {
       const denom = denoms[i];
       const rates = [];
+      // TODO: num APIs
       for (let j = 0; j < 3; j += 1) {
         if (exchangeRates[j].error === false) {
           rates.push(exchangeRates[j].parsedFXData[denom]);
@@ -67,7 +74,7 @@ const InternalFunctions = {
   },
 };
 
-
+// TODO: refactor and modulerize
 async function fetchWithFallback(denoms) {
   const mappedDenoms = InternalFunctions.denomMapper(denoms);
   const denomsWithUSD = mappedDenoms.slice(0);
@@ -128,6 +135,7 @@ module.exports = {
   fetchWithFallback,
 };
 
+// TODO: remove
 fetchWithFallback(['jpt', 'gbt', 'krt'])
   .then((res) => {
     console.log(res);

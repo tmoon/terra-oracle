@@ -1,3 +1,8 @@
+/**
+* This file enables the cli to show beautifully formatted help prompts
+* using command-line-usage and chalk
+*/
+
 const commandLineUsage = require('command-line-usage');
 const chalk = require('chalk');
 

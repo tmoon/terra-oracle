@@ -1,9 +1,8 @@
-import arg from 'arg';
-import help from './help';
+// import arg from 'arg';
+const arg = require('arg');
+const { help } = require('./help');
 
 function parseArgumentsIntoOptions(rawArgs) {
-  // for debug
-  console.log(rawArgs);
   const args = arg({
     '--denom': String,
     '--price': Number,
@@ -27,11 +26,11 @@ function parseArgumentsIntoOptions(rawArgs) {
   };
 }
 
-export function cli(args) {
-  const options = parseArgumentsIntoOptions(args);
-  // for debug
-  console.log(options);
-  if(options.help) {
-    help();
-  }
-}
+module.exports = {
+  cli: (args) => {
+    const options = parseArgumentsIntoOptions(args);
+    if (options.help) {
+      help();
+    }
+  },
+};

@@ -1,0 +1,16 @@
+{
+  "name": "oracle",
+  "description": "Terra oracle voting daemon.",
+  "author": "Covalent",
+  "cwd": "/node/my-node-service/",
+  "app": "src/run.js",
+  "app.args": "-debug",
+  "pid": "/var/run/oracle.pid",
+  "log": "/var/log/oracle/log",
+  "error": "/var/log/oracle/error",
+  "engine": "node",
+  "engine.bin": "/usr/bin/node",
+  "logrotate": true,
+  "logrotate.rotate": "1",
+  "logrotate.frequency": "weekly"
+}

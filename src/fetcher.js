@@ -1,3 +1,12 @@
+/** This file contains critical functions that allow fetching a robust 
+* estimation for LUNA (here ETH) for various major foreign currencie.
+* 
+* It has two steps: 1) Getting a matrix of ETH -> foreign currency data from 5 major exchanges
+* 2) Then a best effort missing value estimation using 3 feeds of FX APIs
+*
+* Due to using 5 data feeds for crypto and 3 feeds for FX rates, this program is robust and has 
+* enough failsafe mechanisms built in
+*/
 const ccxt = require('ccxt');
 const forex = require('./forex');
 const config = require('../config/constant.json');

@@ -1,5 +1,7 @@
 const ccxt = require('ccxt');
+const forex = require('./forex');
 const config = require('../config/constant.json');
+
 
 /* eslint-disable */
 const exchanges = {
@@ -17,7 +19,7 @@ const InternalFunctions = {
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
-      if(config.FX_CURRENCY_MAP.hasOwnProperty(denoms[i]) === true){
+      if (config.FX_CURRENCY_MAP.hasOwnProperty(denoms[i]) === true) {
         denom = config.FX_CURRENCY_MAP[denoms[i]];
         newDenoms.push(denom);
       }
@@ -43,16 +45,32 @@ const InternalFunctions = {
     const sorted = numbers.slice().sort();
     const middle = Math.floor(sorted.length / 2);
     if (sorted.length % 2 === 0) {
-        return (sorted[middle - 1] + sorted[middle]) / 2;
+      return (sorted[middle - 1] + sorted[middle]) / 2;
     }
     return sorted[middle];
-  }
+  },
+
+  async getForexExchangeRates(denoms) {
+    const exchangeRates = await forex.getForexRates(denoms);
+    const medianRates = {};
+    for (let i = 0; i < denoms.length; i += 1) {
+      const denom = denoms[i];
+      const rates = [];
+      for (let j = 0; j < 3; j += 1) {
+        if (exchangeRates[j].error === false) {
+          rates.push(exchangeRates[j].parsedFXData[denom]);
+        }
+      }
+      medianRates[config.FX_CURRENCY_MAP[denoms]] = InternalFunctions.getMedian(rates);
+    }
+    return medianRates;
+  },
 };
 
 
 async function fetchWithFallback(denoms) {
   const mappedDenoms = InternalFunctions.denomMapper(denoms);
-  var denomsWithUSD = mappedDenoms.slice(0);
+  const denomsWithUSD = mappedDenoms.slice(0);
   if (denomsWithUSD.includes('USD') === false) {
     denomsWithUSD.push('USD');
   }
@@ -81,21 +99,20 @@ async function fetchWithFallback(denoms) {
     exchangeCurrencyMap[rateResult.exchange][rateResult.currency] = rateResult.rate;
   }
 
-  var medianDenoms = {}
-  const usdExchangeRates = {}
+  const medianDenoms = {};
+  const usdExchangeRates = await InternalFunctions.getForexExchangeRates(denoms);
 
   for (let mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
     const denom = mappedDenoms[mappedDenomsIdx];
-    var rates = [];
+    const rates = [];
     for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
       const exchange = exchangeNames[exchangeNamesIdx];
-      if(exchangeCurrencyMap[exchange][denom] === null) {
-        if(usdExchangeRates.hasOwnProperty(denom)){
-          const usdInferredExchangeRate = usdExchangeRates[denom] * exchangeCurrencyMap[exchange]['USD'];
+      if (exchangeCurrencyMap[exchange][denom] === null) {
+        if (usdExchangeRates.hasOwnProperty(denom)) {
+          const usdInferredExchangeRate = usdExchangeRates[denom] * exchangeCurrencyMap[exchange].USD;
           rates.push(usdInferredExchangeRate);
-        } 
-      }
-      else {
+        }
+      } else {
         rates.push(exchangeCurrencyMap[exchange][denom]);
       }
     }
@@ -110,10 +127,10 @@ module.exports = {
   fetchWithFallback,
 };
 
-// fetchWithFallback(['gbt', 'krt'])
-// .then((res) => {
-//   console.log(res);
-// })
-// .catch(e => {
-//   console.log(e);
-// })
+fetchWithFallback(['jpt', 'gbt', 'krt'])
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((e) => {
+    console.log(e);
+  });

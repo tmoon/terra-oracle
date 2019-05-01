@@ -17,8 +17,8 @@ const InternalFunctions = {
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
-      const denom = config.FX_CURRENCY_MAP[denoms[i]];
-      if (denom !== undefined) {
+      if(config.FX_CURRENCY_MAP.hasOwnProperty(denoms[i]) === true){
+        denom = config.FX_CURRENCY_MAP[denoms[i]];
         newDenoms.push(denom);
       }
     }
@@ -38,12 +38,21 @@ const InternalFunctions = {
       rate,
     };
   },
+
+  getMedian(numbers) {
+    const sorted = numbers.slice().sort();
+    const middle = Math.floor(sorted.length / 2);
+    if (sorted.length % 2 === 0) {
+        return (sorted[middle - 1] + sorted[middle]) / 2;
+    }
+    return sorted[middle];
+  }
 };
 
 
 async function fetchWithFallback(denoms) {
   const mappedDenoms = InternalFunctions.denomMapper(denoms);
-  const denomsWithUSD = mappedDenoms;
+  var denomsWithUSD = mappedDenoms.slice(0);
   if (denomsWithUSD.includes('USD') === false) {
     denomsWithUSD.push('USD');
   }
@@ -72,10 +81,39 @@ async function fetchWithFallback(denoms) {
     exchangeCurrencyMap[rateResult.exchange][rateResult.currency] = rateResult.rate;
   }
 
-  return exchangeCurrencyMap;
+  var medianDenoms = {}
+  const usdExchangeRates = {}
+
+  for (let mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
+    const denom = mappedDenoms[mappedDenomsIdx];
+    var rates = [];
+    for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
+      const exchange = exchangeNames[exchangeNamesIdx];
+      if(exchangeCurrencyMap[exchange][denom] === null) {
+        if(usdExchangeRates.hasOwnProperty(denom)){
+          const usdInferredExchangeRate = usdExchangeRates[denom] * exchangeCurrencyMap[exchange]['USD'];
+          rates.push(usdInferredExchangeRate);
+        } 
+      }
+      else {
+        rates.push(exchangeCurrencyMap[exchange][denom]);
+      }
+    }
+    medianDenoms[config.FX_CURRENCY_MAP_REVERSE[denom]] = InternalFunctions.getMedian(rates);
+  }
+
+  return medianDenoms;
 }
 
 
 module.exports = {
   fetchWithFallback,
 };
+
+// fetchWithFallback(['gbt', 'krt'])
+// .then((res) => {
+//   console.log(res);
+// })
+// .catch(e => {
+//   console.log(e);
+// })

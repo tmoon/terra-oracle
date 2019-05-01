@@ -99,4 +99,4 @@ async function getForexRates(denoms) {
 
 module.exports = {
   getForexRates,
-}; 
+};

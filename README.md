@@ -1,4 +1,4 @@
-# <span style="color:blue">*Terra Oracle Feeder*</span>
+# <span style="color:blue">Terra Oracle Feeder</span>
 
 
 

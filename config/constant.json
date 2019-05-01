@@ -24,5 +24,20 @@
         "JPY": "jpt",
         "EUR": "eut",
         "GBP": "gbt"
+    },
+
+    "FX_API0": {
+        "source": "freeforexapi",
+        "url": "https://www.freeforexapi.com/api/live?pairs="
+    },
+
+    "FX_API1": {
+        "source": "exchangeratesapi",
+        "url": "https://api.exchangeratesapi.io/latest?base=USD&symbols="
+    },
+
+    "FX_API2": {
+        "source": "cryptocompare",
+        "url": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms="
     }
 }

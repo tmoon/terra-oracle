@@ -1,0 +1,16 @@
+{
+  "name": "oracle-feeder",
+  "description": "Terra oracle voting daemon.",
+  "author": "Covalent",
+  "cwd": "/node/my-node-service/",
+  "app": "src/run.js",
+  "app.args": "-debug",
+  "pid": "/var/run/oracle-feeder.pid",
+  "log": "/var/log/oracle-feeder/log",
+  "error": "/var/log/oracle-feeder/error",
+  "engine": "node",
+  "engine.bin": "/usr/bin/node",
+  "logrotate": true,
+  "logrotate.rotate": "1",
+  "logrotate.frequency": "weekly"
+}

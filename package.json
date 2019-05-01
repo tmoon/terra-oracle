@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js"
+    "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js",
+    "lint-fix": "./node_modules/eslint/bin/eslint.js --fix src/*.js test/*.js"
   },
   "keywords": [
     "cli",

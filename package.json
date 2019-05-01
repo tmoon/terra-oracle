@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js"
+    "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js",
+    "lint-fix": "./node_modules/eslint/bin/eslint.js --fix src/*.js test/*.js"
   },
   "keywords": [
     "cli",
@@ -22,7 +23,9 @@
   "dependencies": {
     "arg": "^4.1.0",
     "esm": "^3.2.22",
-    "inquirer": "^6.3.1"
+    "inquirer": "^6.3.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

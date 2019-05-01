@@ -7,5 +7,11 @@
         "jpy": "ujpy",
         "eur": "ueur",
         "gbp": "ugbp"
+    },
+    "FETCH_APIS" : {
+        "BASE_API" : {
+            "URL": "https://min-api.cryptocompare.com/data/price",
+            "API_KEY": "850ae1aa37dc6215895fa80c23bb808c79472181e001eefce8365ef8a26b394c"
+        }
     }
 }

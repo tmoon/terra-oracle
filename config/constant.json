@@ -19,19 +19,16 @@
 
     "FX_API0": {
         "source": "freeforexapi",
-        // "url": "https://www.freeforexapi.com/api/live?pairs=USDEUR,USDGBP,USDCNY,USDKRW,USDJPY"
         "url": "https://www.freeforexapi.com/api/live?pairs="
     },
 
     "FX_API1": {
         "source": "exchangeratesapi",
-        // "url": "https://api.exchangeratesapi.io/latest?base=USD&symbols=EUR,GBP,CNY,KRW,JPY",
         "url": "https://api.exchangeratesapi.io/latest?base=USD&symbols="
     },
 
     "FX_API2": {
         "source": "cryptocompare",
-        // "url": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=EUR,GBP,CNY,KRW,JPY",
-        "url": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=EUR,GBP,CNY,KRW,JPY"
+        "url": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms="
     }
 }

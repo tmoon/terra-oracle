@@ -1,11 +1,19 @@
 {
     "CLI_CURRENCY_MAP" : {
-        "usd": "uusd",
-        "krw": "ukrw",
-        "sdr": "usdr",
-        "cny": "ucny",
-        "jpy": "ujpy",
-        "eur": "ueur",
-        "gbp": "ugbp"
+        "ust": "uusd",
+        "krt": "ukrw",
+        "cnt": "ucny",
+        "jpt": "ujpy",
+        "eut": "ueur",
+        "gbt": "ugbp"
+    },
+
+    "FX_CURRENCY_MAP" : {
+        "ust": "usd",
+        "krt": "krw",
+        "cnt": "cny",
+        "jpt": "jpy",
+        "eut": "eur",
+        "gbt": "gbp"
     }
 }

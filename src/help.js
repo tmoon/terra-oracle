@@ -1,4 +1,5 @@
-export default function help() {
-    // for debug
-    console.log('Print HELP');
-}
+module.exports = {
+  help: () => {
+    // TODO HELP
+  },
+};

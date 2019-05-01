@@ -62,18 +62,15 @@ const InternalFunctions = {
 
     if (apiNum === 0) {
       for (let denom of Object.keys(denomToKey)) {
-        let currencyName = config.FX_CURRENCY_MAP[denom];
-        finalFXData[currencyName] = data.rates[denomToKey[denom]].rate;
+        finalFXData[denom] = data.rates[denomToKey[denom]].rate;
       } 
     } else if (apiNum === 1) {
       for (let denom of Object.keys(denomToKey)) {
-        let currencyName = config.FX_CURRENCY_MAP[denom];
-        finalFXData[currencyName] = data.rates[denomToKey[denom]];
+        finalFXData[denom] = data.rates[denomToKey[denom]];
       }
     } else if (apiNum === 2) {
       for (let denom of Object.keys(denomToKey)) {
-        let currencyName = config.FX_CURRENCY_MAP[denom];
-        finalFXData[currencyName] = data[denomToKey[denom]];
+        finalFXData[denom] = data[denomToKey[denom]];
       }
     }
 
@@ -93,29 +90,17 @@ const InternalFunctions = {
   },
 };
 
+
+
 async function getForexRates(denoms) {
-  let res = {};
-
-  for (var i = 0; i < 3; i += 1) {
-    res[`API${i}Data`] = await InternalFunctions.getAPIData(denoms, 0)
+  let promises = [];
+  for(var i = 0; i < 3; i += 1){
+    promises.push(InternalFunctions.getAPIData(denoms, i));
   }
-
+  let res = await Promise.all(promises);
   return res;
 }
 
 module.exports = {
   getForexRates,
 };
-
-// const denoms = ['ust', 'jpt', 'krt'];
-
-// async function blah(denoms) {
-//   const dat = await getForexRates(denoms)
-//   console.log(dat);
-// }
-
-
-// blah(denoms);
-
-
-/* eslint-enable */

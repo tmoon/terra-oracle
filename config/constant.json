@@ -1,0 +1,11 @@
+{
+    "CURRENCT_MAP" : {
+        "usd": "uusd",
+        "krw": "ukrw",
+        "sdr": "usdr",
+        "cny": "ucny",
+        "jpy": "ujpy",
+        "eur": "ueur",
+        "gbp": "ugbp"
+    }
+}

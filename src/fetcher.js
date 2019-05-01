@@ -19,8 +19,8 @@ const InternalFunctions = {
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
-      if (config.FX_CURRENCY_MAP.hasOwnProperty(denoms[i]) === true) {
-        denom = config.FX_CURRENCY_MAP[denoms[i]];
+      if (Object.prototype.hasOwnProperty.call(config.FX_CURRENCY_MAP, denoms[i]) === true) {
+        const denom = config.FX_CURRENCY_MAP[denoms[i]];
         newDenoms.push(denom);
       }
     }
@@ -108,8 +108,9 @@ async function fetchWithFallback(denoms) {
     for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
       const exchange = exchangeNames[exchangeNamesIdx];
       if (exchangeCurrencyMap[exchange][denom] === null) {
-        if (usdExchangeRates.hasOwnProperty(denom)) {
-          const usdInferredExchangeRate = usdExchangeRates[denom] * exchangeCurrencyMap[exchange].USD;
+        if (Object.prototype.hasOwnProperty.call(usdExchangeRates, denom)) {
+          const usdInferredExchangeRate = usdExchangeRates[denom
+          ] * exchangeCurrencyMap[exchange].USD;
           rates.push(usdInferredExchangeRate);
         }
       } else {

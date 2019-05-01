@@ -9,11 +9,27 @@
     },
 
     "FX_CURRENCY_MAP" : {
-        "ust": "usd",
-        "krt": "krw",
-        "cnt": "cny",
-        "jpt": "jpy",
-        "eut": "eur",
-        "gbt": "gbp"
+        "ust": "USD",
+        "krt": "KRW",
+        "cnt": "CNY",
+        "jpt": "JPY",
+        "eut": "EUR",
+        "gbt": "GBP"
+    },
+
+    "FX_CURRENCY_MAP_REVERSE" : {
+        "USD": "ust",
+        "KRW": "krt",
+        "CNY": "cnt",
+        "JPY": "jpt",
+        "EUR": "eut",
+        "GBP": "gbt"
+    },    
+
+    "FETCH_APIS" : {
+        "BASE_API" : {
+            "URL": "https://min-api.cryptocompare.com/data/price",
+            "API_KEY": "850ae1aa37dc6215895fa80c23bb808c79472181e001eefce8365ef8a26b394c"
+        }
     }
 }

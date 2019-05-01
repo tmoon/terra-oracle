@@ -1,7 +1,7 @@
-const request = require('request-promise');
 const ccxt = require('ccxt');
 const config = require('../config/constant.json');
 
+/* eslint-disable */
 const exchanges = {
   coinmarketcap: new ccxt.coinmarketcap(),
   bitfinex: new ccxt.bitfinex(),
@@ -9,6 +9,7 @@ const exchanges = {
   coinbasepro: new ccxt.coinbasepro(),
   okex: new ccxt.okex(),
 };
+/* eslint-enable */
 
 const LUNA = 'ETH';
 
@@ -50,7 +51,7 @@ async function fetchWithFallback(denoms) {
   const ratePromises = [];
 
   const exchangeNames = Object.keys(exchanges);
-  for (var exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
+  for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
     const exchange = exchangeNames[exchangeNamesIdx];
     for (let denomsWithUSDIdx = 0; denomsWithUSDIdx < denomsWithUSD.length; denomsWithUSDIdx += 1) {
       const denom = denomsWithUSD[denomsWithUSDIdx];
@@ -61,7 +62,7 @@ async function fetchWithFallback(denoms) {
   const rateResults = await Promise.all(ratePromises);
 
   const exchangeCurrencyMap = {};
-  for (var exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
+  for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
     const exchange = exchangeNames[exchangeNamesIdx];
     exchangeCurrencyMap[exchange] = {};
   }

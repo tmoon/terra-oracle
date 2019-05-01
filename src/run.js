@@ -7,7 +7,7 @@ const serviceConfig = require('./../config/service.json');
 const CONSTANT = require('./../config/constant.json');
 
 const { fetchWithFallback } = require('./fetcher');
-const { submitVote } = require('./vote/vote.js');
+const { submitVote } = require('./vote.js');
 
 module.exports = {
   run: (options) => {

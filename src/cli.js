@@ -1,4 +1,3 @@
-// import arg from 'arg';
 const arg = require('arg');
 const { help } = require('./help');
 const { addDaemon, removeDaemon } = require('./run.js');

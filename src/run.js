@@ -4,8 +4,10 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 const serviceConfig = require('./../config/service.json');
+const CONSTANT = require('./../config/constant.json');
 
 const { fetchWithFallback } = require('./fetcher');
+const { submitVote } = require('./vote/vote.js');
 
 module.exports = {
   run: (options) => {
@@ -28,8 +30,17 @@ module.exports = {
     // # * * * * * *
 
     cron.schedule(`* */${options.interval} * * *`, async () => {
-      await fetchWithFallback(['ust']);
-      // TODO vote
+      const currencyList = CONSTANT.CLI_CURRENCY_MAP.keys();
+      const values = await fetchWithFallback(currencyList);
+      for (let i = 0; i < currencyList.length; i += 1) {
+        const resp = submitVote({
+          denom: currencyList[i],
+          price: values[currencyList[i]],
+        });
+        if (resp.status !== 'success') {
+          throw Error('Error in sumitting values', resp.message, currencyList[i]);
+        }
+      }
     });
     console.log('done');
   },

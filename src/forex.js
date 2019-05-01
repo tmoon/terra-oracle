@@ -21,7 +21,6 @@ const InternalFunctions = {
       currencyString = denoms.map(denom => InternalFunctions.getCurrencyFromDenom(denom)).join(',');
     }
 
-    // const APIDictKey = ;
     const finalUrl = config[`FX_API${apiNum}`].url + currencyString;
 
     return finalUrl;

@@ -1,5 +1,5 @@
 /**
-* This file enables the cli to show beautifully formatted help prompts
+* This file enables the CLI to show beautifully formatted help prompts
 * using command-line-usage and chalk
 */
 

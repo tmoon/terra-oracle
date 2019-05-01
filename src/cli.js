@@ -36,5 +36,5 @@ module.exports = {
     } else if (options.command === 'rm') {
       removeDaemon();
     }
-  }
+  },
 };

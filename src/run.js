@@ -33,15 +33,19 @@ module.exports = {
       console.log(CONSTANT.CLI_CURRENCY_MAP);
       const whiteListedCur = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
       const res = await fetchWithFallback(whiteListedCur);
-      const currencyList = Object.keys(res);
-      console.log(res);
+      let { result } = res;
+      if (result === undefined) {
+        result = {};
+      }
+      const currencyList = Object.keys(result);
+      console.log(result);
       console.log(currencyList);
       for (let i = 0; i < currencyList.length; i += 1) {
         console.log('currency calling ', i);
         try {
           const voteRes = submitVote({
             denom: currencyList[i],
-            price: res[currencyList[i]],
+            price: result[currencyList[i]],
             key: options.key,
             password: options.password,
           });

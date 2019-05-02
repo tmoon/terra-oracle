@@ -163,11 +163,13 @@ async function fetchWithFallback(denoms) {
 }
 
 function fetch(options) {
+  let denoms;
   if (options.denom === undefined) {
-    console.log(chalk.red('--denom is required for fetch'));
+    denom = Object.keys(config.FX_CURRENCY_MAP);
   }
-
-  const denoms = options.denom.split(',').map(cur => cur.trim());
+  else {
+    denoms = options.denom.split(',').map(cur => cur.trim());
+  }
 
   fetchWithFallback(denoms)
     .then((res) => {

@@ -1,11 +1,7 @@
 const cron = require('node-cron');
-const service = require('service-systemd');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const pm2 = require('pm2');
 const chalk = require('chalk');
 
-const serviceConfig = require('./../config/service.json');
 const pm2Config = require('./../config/pm2.json');
 const CONSTANT = require('./../config/constant.json');
 

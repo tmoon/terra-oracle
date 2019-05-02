@@ -1,5 +1,11 @@
 const assert = require('assert');
-const forex = require('../src/forex');
+const rewire = require('rewire');
+const _ = require('underscore');
+
+const app = rewire('../src/forex');
+/* eslint-disable */
+const forex = app.__get__('InternalFunctions');
+/* eslint-enable */
 
 describe('Forex Internal Functions Unit Testing', () => {
   describe('#getCurrencyFromDenom(denom)', () => {
@@ -18,7 +24,7 @@ describe('Forex Internal Functions Unit Testing', () => {
       assert.equal(result === 'USDGBP', true);
     });
     it('Should return USDUSD', () => {
-      const result = forex.getCurrencyPairFromDenom('USD');
+      const result = forex.getCurrencyPairFromDenom('ust');
       assert.equal(result === 'USDUSD', true);
     });
   });
@@ -39,28 +45,30 @@ describe('Forex Internal Functions Unit Testing', () => {
   describe('#getDataFromAPI(denoms, apiNum)', () => {
     it('Retrive data from api 2', async () => {
       const result = await forex.getDataFromAPI(['eut', 'jpt'], 2);
-      assert.equal(Object.keys(result.jsonData) === ['EUR', 'JPY'], true);
+      assert.equal(_.isEqual(Object.keys(result.jsonData), ['EUR', 'JPY']), true);
     });
   });
   describe('#getDenomToKey(denoms, apiNum)', () => {
     it('Should return json object from api 0', () => {
       const result = forex.getDenomToKey(['cnt', 'krt'], 0);
-      assert.equal(result === { cnt: 'USDCNY', krt: 'USDKRW' }, true);
+      assert.equal(_.isEqual(result, { cnt: 'USDCNY', krt: 'USDKRW' }), true);
     });
     it('Should return json object from api 1', () => {
       const result = forex.getDenomToKey(['ust', 'eut'], 1);
-      assert.equal(result === { ust: 'USD', jpt: 'JPY' }, true);
+      assert.equal(_.isEqual(result, { ust: 'USD', eut: 'EUR' }), true);
     });
   });
   describe('#getAPIData(denoms, apiNum)', () => {
     it('Should return json object from api 2', async () => {
       const result = await forex.getAPIData(['ust', 'jpt'], 2);
-      assert.equal(Object.keys(result.parsedFXData) === ['USD', 'JPY'], true);
+      // console.log(result.parsedFXData);
+      assert.equal(_.isEqual(Object.keys(result.parsedFXData), ['USD', 'JPY']), true);
     });
   });
   describe('#getForexRates(denoms)', () => {
     it('Should return json object', async () => {
       const result = await forex.getForexRates(['cnt', 'jpt']);
+      // console.log(result);
       assert.equal(Object.keys(result).length === 3, true);
     });
   });

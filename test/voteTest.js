@@ -35,12 +35,12 @@ describe('Voting Tests', () => {
       });
       assert.equal(result.status === 'error' && result.message === '"price" must be number', true);
     });
-    it('Should return succeed', () => {
-      const result = submitVote({
-        denom: 'ust', price: 114.7, key: 'thisIskey', password: 'password',
-      });
-      assert.equal(result.status === 'succeed' && result.message === '', true);
-    });
+    // it('Should return succeed', () => {
+    //   const result = submitVote({
+    //     denom: 'ust', price: 114.7, key: 'thisIskey', password: 'password',
+    //   });
+    //   assert.equal(result.status === 'succeed' && result.message === '', true);
+    // });
   });
   describe('Internal Function: $convertToMicroUnit', () => {
     it('Should return 1000000 times for each input', () => {

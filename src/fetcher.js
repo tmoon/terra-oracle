@@ -1,16 +1,17 @@
-/** This file contains critical functions that allow fetching a robust 
+/** This file contains critical functions that allow fetching a robust
 * estimation for LUNA (here ETH) for various major foreign currencie.
-* 
+*
 * It has two steps: 1) Getting a matrix of ETH -> foreign currency data from 5 major exchanges
 * 2) Then a best effort missing value estimation using 3 feeds of FX APIs
 *
-* Due to using 5 data feeds for crypto and 3 feeds for FX rates, this program is robust and has 
+* Due to using 5 data feeds for crypto and 3 feeds for FX rates, this program is robust and has
 * enough failsafe mechanisms built in
 */
+const chalk = require('chalk');
+
 const ccxt = require('ccxt');
 const forex = require('./forex');
 const config = require('../config/constant.json');
-
 
 /* eslint-disable */
 const exchanges = {
@@ -22,7 +23,7 @@ const exchanges = {
 };
 /* eslint-enable */
 
-/* In future, if LUNA is exchanged in some of the exchanges it would be sufficient 
+/* In future, if LUNA is exchanged in some of the exchanges it would be sufficient
 * to change this flag */
 const LUNA = 'ETH';
 
@@ -139,9 +140,24 @@ async function fetchWithFallback(denoms) {
   return medianDenoms;
 }
 
+function fetch(options) {
+  if (options.denom === undefined) {
+    throw Error('--denom is required for fetch');
+  }
+
+  const denoms = options.denom.split(',').map(cur => cur.trim());
+
+  fetchWithFallback(denoms)
+    .then((res) => {
+      console.log(chalk.blue(JSON.stringify(res, null, 2)));
+    }).catch((err) => {
+      console.log(chalk.red('Error in fetch: ', err));
+    });
+}
 
 module.exports = {
   fetchWithFallback,
+  fetch,
 };
 
 // TODO: remove

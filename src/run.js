@@ -2,12 +2,15 @@ const cron = require('node-cron');
 const service = require('service-systemd');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const pm2 = require('pm2');
 
 const serviceConfig = require('./../config/service.json');
+const pm2Config = require('./../config/pm2.json');
 const CONSTANT = require('./../config/constant.json');
 
 const { fetchWithFallback } = require('./fetcher');
-const { submitVote } = require('./vote/vote.js');
+const { submitVote } = require('./vote.js');
+
 
 module.exports = {
   run: (options) => {
@@ -30,7 +33,8 @@ module.exports = {
     // # * * * * * *
 
     cron.schedule(`* */${options.interval} * * *`, async () => {
-      const currencyList = CONSTANT.CLI_CURRENCY_MAP.keys();
+      console.log(CONSTANT.CLI_CURRENCY_MAP);
+      const currencyList = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
       const values = await fetchWithFallback(currencyList);
       for (let i = 0; i < currencyList.length; i += 1) {
         const resp = submitVote({
@@ -83,6 +87,48 @@ module.exports = {
       }).catch((err) => {
         console.log('Error occurred', err);
       });
+  },
+  runDaemonPM2: (options) => {
+    if (options.interval === undefined) {
+      throw Error('interval is necessary for run command');
+    }
+    pm2Config.args = [options.interval];
+    pm2Config.cwd = process.cwd();
+    pm2Config.output = `${process.cwd()}${pm2Config.output}`;
+    pm2Config.error = `${process.cwd()}${pm2Config.error}`;
+
+    pm2.connect((err) => {
+      if (err) {
+        console.log(err);
+        throw Error('Found Errors ', err);
+      }
+
+      pm2.start(pm2Config, (err1, apps) => {
+        console.log(apps);
+        pm2.disconnect();
+        if (err1) {
+          console.log(err1);
+          throw err1;
+        }
+      });
+    });
+  },
+  removeDaemonPM2: () => {
+    pm2.connect((err) => {
+      if (err) {
+        console.log(err);
+        throw Error('Found Errors', err);
+      }
+
+      pm2.delete('oracle-feeder', (err1, apps) => {
+        console.log(apps);
+        pm2.disconnect();
+        if (err1) {
+          console.log(err1);
+          throw Error('Found errors', err1);
+        }
+      });
+    });
   },
 };
 

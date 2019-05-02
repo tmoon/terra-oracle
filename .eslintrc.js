@@ -15,6 +15,7 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
+        "prefer-const": 1
     },
     "plugins": [],
 };

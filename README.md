@@ -34,9 +34,16 @@ As this tool is can be a critical part for the network, we designed this with va
 ## Functionality, Implmentation, and Mechanism
 In this section, 
 ### `fetch`
+This infers the crypto exchange rates in two steps:
+1. Fetch Data from APIs: 
+    1. We fetch exchange rates for the 6 crypto-fiat pairs from 5 major exchanges. Then we end up with a matrix similar to Matrix1. 
+    2. Then we fetch FX rates wrt USD from 3 FX APIs (Matrix 3). Then we get the combined Fx rates by taking a median of each column discarding the missing values (Matrix 3)
+2. Infer missing values using FX Data: 
+    1. In this step, first we infer the potential values of the crypto for all exchanges by filling out Matrix 1 using the FxCombined rate in Matrix 3 and get Matrix 4
+    2. Finally, we take a median along each column to get the final price of the crypto.
+<img src="./docs/mat1.png" width="600">
+<img src="./docs/mat2.png" width="590">
 
-<img src="./docs/mat1.png" width="650">
-<img src="./docs/mat2.png" width="650">
 Relevant files: `src/fetcher.js, src/forex.js`
 
 ### `vote`

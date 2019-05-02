@@ -61,8 +61,7 @@ describe('Forex Internal Functions Unit Testing', () => {
   describe('#getAPIData(denoms, apiNum)', () => {
     it('Should return json object from api 2', async () => {
       const result = await forex.getAPIData(['ust', 'jpt'], 2);
-      // console.log(result.parsedFXData);
-      assert.equal(_.isEqual(Object.keys(result.parsedFXData), ['USD', 'JPY']), true);
+      assert.equal(_.isEqual(Object.keys(result.parsedFXData), ['ust', 'jpt']), true);
     });
   });
   describe('#getForexRates(denoms)', () => {

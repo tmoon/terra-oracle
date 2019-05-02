@@ -57,7 +57,7 @@ module.exports = {
             key: options.key,
             password: options.password,
           });
-          await sleep(2000);
+          await sleep(5000);
           /* eslint-enable */
           logger.info('found res', voteRes);
         } catch (error) {

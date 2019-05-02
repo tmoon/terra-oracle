@@ -53,7 +53,7 @@ module.exports = {
       };
     }
 
-    if (voteParam.pw === undefined) {
+    if (voteParam.password === undefined) {
       console.log(CHALK.red('"pw" flag is missed in command'));
       return {
         status: 'error',
@@ -62,7 +62,7 @@ module.exports = {
     }
 
     const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
-    const command = `echo ${voteParam.pw} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
+    const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
 
     EXEC(command, (error, stdOut, stdErr) => {
       if (stdErr !== null) {

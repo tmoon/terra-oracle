@@ -72,7 +72,7 @@ const InternalFunctions = {
           rates.push(exchangeRates[j].parsedFXData[denom]);
         }
       }
-      medianRates[config.FX_CURRENCY_MAP[denoms]] = InternalFunctions.getMedian(rates);
+      medianRates[config.FX_CURRENCY_MAP[denom]] = InternalFunctions.getMedian(rates);
     }
     return medianRates;
   },
@@ -164,7 +164,7 @@ async function fetchWithFallback(denoms) {
 
 function fetch(options) {
   if (options.denom === undefined) {
-    throw Error('--denom is required for fetch');
+    console.log(chalk.red('--denom is required for fetch'));
   }
 
   const denoms = options.denom.split(',').map(cur => cur.trim());

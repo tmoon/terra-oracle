@@ -44,10 +44,16 @@ module.exports = {
 
     EXEC(command, (error, stdOut, stdErr) => {
       if (stdErr !== null) {
-        throw new Error(stdErr);
+        return {
+          status: 'error',
+          message: stdErr,
+        };
       }
       if (error !== null) {
-        throw new Error(error);
+        return {
+          status: 'error',
+          message: error,
+        };
       }
       return {
         status: 'succeed',

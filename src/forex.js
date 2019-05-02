@@ -41,6 +41,7 @@ const InternalFunctions = {
     }
   },
 
+  // create denom to Key mapping for specific API
   getDenomToKey(denoms, apiNum) {
     const denomToKey = {};
 
@@ -74,6 +75,7 @@ const InternalFunctions = {
     return res;
   },
 
+  // fetch and then parse each API data in standard format
   async getAPIData(denoms, apiNum) {
     const res = await InternalFunctions.getDataFromAPI(denoms, apiNum);
 
@@ -94,6 +96,8 @@ const InternalFunctions = {
   },
 };
 
+// get all FX rates from 3 FX APIs
+// to make it fast, we use pooled promises and resolve them all together
 async function getForexRates(denoms) {
   const promises = [];
   for (let i = 0; i < 3; i += 1) {

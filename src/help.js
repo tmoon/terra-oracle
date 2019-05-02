@@ -20,6 +20,7 @@ const sections = [
     content: [
       { name: 'fetch', summary: 'Fetch the current price of luna. If denom is not specified, fetches the prices in all available denoms' },
       { name: 'run', summary: 'Runs in daemon mode. Runs periodically (constrained by the interval command) to fetch and vote to the chain' },
+      { name: 'rm', summary: 'Stops and removes the persistent daemon' },
       { name: 'vote', summary: 'Transactions subcommands' },
     ],
   },

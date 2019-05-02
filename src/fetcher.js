@@ -7,6 +7,7 @@
 * Due to using 5 data feeds for crypto and 3 feeds for FX rates, this program is robust and has
 * enough failsafe mechanisms built in
 */
+const chalk = require('chalk');
 
 const ccxt = require('ccxt');
 const forex = require('./forex');
@@ -139,9 +140,24 @@ async function fetchWithFallback(denoms) {
   return medianDenoms;
 }
 
+function fetch(options) {
+  if (options.denom === undefined) {
+    throw Error('--denom is required for fetch');
+  }
+
+  const denoms = options.denom.split(',').map(cur => cur.trim());
+
+  fetchWithFallback(denoms)
+    .then((res) => {
+      console.log(chalk.blue(JSON.stringify(res, null, 2)));
+    }).catch((err) => {
+      console.log(chalk.red('Error in fetch: ', err));
+    });
+}
 
 module.exports = {
   fetchWithFallback,
+  fetch,
 };
 
 // TODO: remove

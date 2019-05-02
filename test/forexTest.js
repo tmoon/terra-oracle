@@ -47,6 +47,10 @@ describe('Forex Internal Functions Unit Testing', () => {
       const result = forex.getDenomToKey(['cnt', 'krt'], 0);
       assert.equal(result === { cnt: 'USDCNY', krt: 'USDKRW' }, true);
     });
+    it('Should return json object from api 1', () => {
+      const result = forex.getDenomToKey(['ust', 'eut'], 1);
+      assert.equal(result === { ust: 'USD', jpt: 'JPY' }, true);
+    });
   });
   describe('#getAPIData(denoms, apiNum)', () => {
     it('Should return json object from api 2', async () => {

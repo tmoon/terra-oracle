@@ -4,14 +4,12 @@ Oracle feeder is a robust tool that can
 
 1. fetch and infer ETH (or LUNA) exchange rates in 6 major active currencies (namely KRW, USD, JPY, GBP, EUR, CNY)
 2. Submit vote for the price of that specific crypto using `terracli`
-3. It can run a daemon in persistent mode such that it fetches and votes once in every regular pre-defined interval. It automatically restarts itself in case of a crash or a system restart.
-
-As this tool is can be a critical part for the network, we designed this with various robust, failsafe mechanisms
+3. It can run a daemon in persistent mode such that it fetches and votes once in every regular pre-defined interval. It automatically restarts itself in case of a crash or a system restart (uses `pm2`).
 
 
 ## Installation
 
-1. Install [node.js](https://nodejs.org/en/download/) (10.15+ version recommended)
+1. Install [node.js](https://nodejs.org/en/download/) (10.15+ version recommended) and `npm`
 2. Download/clone this repo from `https://github.com/covalent-hq/terra-oracle.git`
 3. run `npm install`  in `terra-oracle` directory: This installs necessary node modules
 4. run `npm link` : registers the `oracle` CLI commands to `bin/oracle`
@@ -37,13 +35,13 @@ In this section, we discuss how we implemented various functionalities of the or
 ### `fetch`
 This infers the crypto exchange rates in two steps:
 1. Fetch Data from APIs: 
-    1. We fetch exchange rates for the 6 crypto-fiat pairs from 5 major exchanges. Then we end up with a matrix similar to Matrix1. 
+    1. We fetch exchange rates for the required crypto-fiat pairs from 5 major exchanges. Then we end up with a matrix similar to Matrix1. 
     2. Then we fetch FX rates wrt USD from 3 FX APIs (Matrix 3). Then we get the combined Fx rates by taking a median of each column discarding the missing values (Matrix 3)
 <img src="./docs/mat1.png" width="600">
 
 2. Infer missing values using FX Data: 
     1. In this step, first we infer the potential values of the crypto for all exchanges by filling out Matrix 1 using the FxCombined rate in Matrix 3 and get Matrix 4
-    2. Finally, we take a median along each column to get the final price of the crypto.
+    2. Finally, we take a median along each column to get the final price of the cryptocurrency.
 <img src="./docs/mat2.png" width="590">
 
 Relevant files: `src/fetcher.js, src/forex.js`
@@ -73,11 +71,15 @@ With `help`, CLI shows  beautifully formatted help prompts using command-line-us
 CLI parser implemented on file: `src/cli.js`. It serves to just pass through the arguments to relevant functions.
 
 ## Limitations
-1. Currently due to some limitations of `ccxt` library, we need to make separate call for every single crypto-fiat pair for each exchange. While we speed it up with a pooled promise (hence they run in parallel), we still need to make 5 * 6 = 30 calls, which is rather expensive and slow. In future, we can try to bring it down to 5 (i.e. number of exchange API) calls.
-2. If ALL the major exchanges delist ETH/USD pair, then it might not be possible to infer the exchange values for other currencies. The reason we leaned towards this assumption is that for the free forex API we could find, there was no easy way to obtain covertion rates between non-USD pairs. In addition, it is highly unlikely that all the major crypto exchanges would de-list ETH/USD pair.
-2. While we chose 5 major crypto exchanges and they have decent uptime, in case, a coin is listed in very few exchanges, downtime in those exchange APIs could stop this program from working. We could use a caching system. However, as we know crypto and forex both could be volatile and depending on stale values is not a great idea.
+1. Currently due to some limitations of `ccxt` library, we need to make separate call for every single crypto-fiat pair for each exchange. While we speed it up with a pooled promise (hence they run in parallel), we still need to make upto 5 * 6 = 30 calls, which is rather expensive and slow. In future, we can try to bring it down to 5 (i.e. number of exchange API) calls.
+2. If ALL the major exchanges delist ETH/USD pair, then it might not be possible to infer the exchange values for other currencies. The reason we leaned towards this assumption is that for the free forex API we could find, there was no easy way to obtain covertion rates between non-USD pairs (e.g. JPY-CNY). In addition, it is highly unlikely that all the major crypto exchanges would de-list ETH/USD pair.
+2. While we chose 5 major crypto exchanges and they have decent uptime, in case, a coin is listed in very few exchanges, downtime in those exchange APIs could stop this program from working. We could use a caching system. However, as we know crypto and forex both could be volatile and depending on stale-values is not a great idea.
 3. While we have tried to write various unit tests, due to time limitation our test coverage is not extremely high. All the relevant tests are in `test/` directory.
-4. Currently we assume that the `terracli` and the running validator node is persistent. We will also add those commands to process monitor.
+4. Currently we assume that the `terracli` and the running validator node are persistent. We could also add those commands to process monitor in `pm2`.
+
+## Reference: Other Docs
+1. [Contribution Doc](https://docs.google.com/document/d/1XBflvlwCAIu4vStYvXpmJELSXn7Mo5nBkWhAV-nwG_s/edit?usp=sharing): In this doc, we mention the contribution each member of the team had 
+2. [Design Thought Process Doc](https://docs.google.com/document/d/1j4CegCqznDU2MjRCjnOP-XyCotwW3P9cTsbuAbatiPg/edit?usp=sharing): While we explain most of our functionality in the README, we went through two phases p0 and p1 for development. In this doc, we explain the evolution of the design process during those two steps.
 
 ## Reference: Interfaces 
 
@@ -111,3 +113,4 @@ Flags:
 `oracle run --interval=15` - fetches and votes every 15 minutes 
 
 `oracle vote --denom=jpt --price=0.1` - submits a `MsgPriceFeed` to `terracli` that claims the price of Luna to be 0.1 JPT/JPY. 
+

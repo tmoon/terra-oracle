@@ -165,9 +165,8 @@ async function fetchWithFallback(denoms) {
 function fetch(options) {
   let denoms;
   if (options.denom === undefined) {
-    denom = Object.keys(config.FX_CURRENCY_MAP);
-  }
-  else {
+    denoms = Object.keys(config.FX_CURRENCY_MAP);
+  } else {
     denoms = options.denom.split(',').map(cur => cur.trim());
   }
 

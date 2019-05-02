@@ -1,0 +1,12 @@
+{
+  "name": "oracle-feeder",
+  "script": "src/run.js",
+  "args": "undefined",
+  "cwd": "process.cwd()",
+  "output": "/log/output.log",
+  "error": "/log/error.log",
+  "maxMemoryRestart": "150M",
+  "restartDelay": 0,
+  "instances": 1,
+  "max_memory_restart": "100M"
+}

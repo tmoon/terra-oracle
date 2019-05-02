@@ -9,7 +9,7 @@ const InternalFunctions = {
 
 module.exports = {
   submitVote: (voteParam) => {
-    if (Object.keys(voteParam).length !== 2) {
+    if (Object.keys(voteParam).length !== 4) {
       console.log(CHALK.red("Parameters doesn't match with standard format."));
       return {
         status: 'error',
@@ -45,8 +45,24 @@ module.exports = {
       };
     }
 
+    if (voteParam.key === undefined) {
+      console.log(CHALK.red('"key" flag is missed in command'));
+      return {
+        status: 'error',
+        message: '"key" flag is missed in command',
+      };
+    }
+
+    if (voteParam.pw === undefined) {
+      console.log(CHALK.red('"pw" flag is missed in command'));
+      return {
+        status: 'error',
+        message: '"pw" flag is missed in command',
+      };
+    }
+
     const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
-    const command = `terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${VOTER.key}`;
+    const command = `echo ${voteParam.pw} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
 
     EXEC(command, (error, stdOut, stdErr) => {
       if (stdErr !== null) {

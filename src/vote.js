@@ -66,18 +66,11 @@ module.exports = {
 
     EXEC(command, (error, stdOut, stdErr) => {
       console.log(error, stdOut, stdErr)
-      if (stdErr !== null) {
+      if (error !== null) {
         console.log(CHALK.red(stdErr));
         return {
           status: 'error',
           message: stdErr,
-        };
-      }
-      if (error !== null) {
-        console.log(CHALK.red(error));
-        return {
-          status: 'error',
-          message: error,
         };
       }
       console.log('Successfully Voted!!');

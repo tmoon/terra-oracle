@@ -82,7 +82,7 @@ const InternalFunctions = {
     if (!res.error) {
       const data = res.jsonData;
 
-      let finalFXData = {};
+      const finalFXData = {};
       for (let i = denoms.length - 1; i >= 0; i -= 1) {
         const denom = denoms[i];
         finalFXData[denom] = InternalFunctions.parseAPIData(data, denomToKey[denom], apiNum);
@@ -95,7 +95,7 @@ const InternalFunctions = {
 };
 
 async function getForexRates(denoms) {
-  let promises = [];
+  const promises = [];
   for (let i = 0; i < 3; i += 1) {
     promises.push(InternalFunctions.getAPIData(denoms, i));
   }

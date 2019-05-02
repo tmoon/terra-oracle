@@ -9,6 +9,12 @@ const CONSTANT = require('./../config/constant.json');
 const { fetchWithFallback } = require('./fetcher');
 const { submitVoteAsync } = require('./vote.js');
 
+function sleep(ms) {
+  logger.debug('sleep');
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 module.exports = {
   run: (options) => {
@@ -51,6 +57,7 @@ module.exports = {
             key: options.key,
             password: options.password,
           });
+          await sleep(2000);
           /* eslint-enable */
           logger.info('found res', voteRes);
         } catch (error) {

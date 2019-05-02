@@ -65,7 +65,6 @@ module.exports = {
     const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
 
     EXEC(command, (error, stdOut, stdErr) => {
-      console.log(error, stdOut, stdErr)
       if (error !== null) {
         console.log(CHALK.red(stdErr));
         return {
@@ -73,10 +72,10 @@ module.exports = {
           message: stdErr,
         };
       }
-      console.log('Successfully Voted!!');
+      console.log('Successfully Voted!!', stdOut);
       return {
         status: 'succeed',
-        message: '',
+        message: stdOut,
       };
     });
     return {

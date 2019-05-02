@@ -24,9 +24,12 @@ const ccxtExchanges = {
 };
 /* eslint-enable */
 
+/* In future, if LUNA is exchanged in some of the exchanges it would be sufficient
+to change this flag */
 const LUNA = 'ETH';
 
 const InternalFunctions = {
+  // checks to make sure only active/valid denominations are taken
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
@@ -38,6 +41,7 @@ const InternalFunctions = {
     return newDenoms;
   },
 
+  // pull relevant currency exchange rate using ccxt
   async getRateByExchange(exchange, currency) {
     let rate;
     try {
@@ -52,6 +56,7 @@ const InternalFunctions = {
     };
   },
 
+  // compute median
   getMedian(numbers) {
     const sorted = numbers.sort((a, b) => a - b);
     const middle = Math.floor(sorted.length / 2);
@@ -61,6 +66,7 @@ const InternalFunctions = {
     return sorted[middle];
   },
 
+  // get median values for USD to major foreign currency rates
   async getForexExchangeRates(denoms) {
     const exchangeRates = await forex.getForexRates(denoms);
     const medianRates = {};
@@ -77,6 +83,9 @@ const InternalFunctions = {
     return medianRates;
   },
 
+  // Get crypto-fiat currency pairs for all the exchanges in specified denomination
+  // To speed up the call, we pool promises for web api requests
+  // and try to resolve all of them together
   async getExchangeCurrencyMap(excahnges, denoms) {
     const ratePromises = [];
     for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
@@ -87,6 +96,7 @@ const InternalFunctions = {
       }
     }
 
+    // pool together the promises for speedup
     const rateResults = await Promise.all(ratePromises);
     const exchangeCurrencyMap = {};
 
@@ -95,6 +105,7 @@ const InternalFunctions = {
       exchangeCurrencyMap[exchange] = {};
     }
 
+    // create crypto-fiat rate matrix (mapping) for all exchanges
     for (let rateResultsIdx = 0; rateResultsIdx < rateResults.length; rateResultsIdx += 1) {
       const rateResult = rateResults[rateResultsIdx];
       exchangeCurrencyMap[rateResult.exchange][rateResult.currency] = rateResult.rate;
@@ -103,6 +114,8 @@ const InternalFunctions = {
     return exchangeCurrencyMap;
   },
 
+  // Infers the crypto-fiat rates for each exchage using the FX rates
+  // The computes median to get the final values
   getMedianRatesWithForexInferredRates(exchangeCurrencyMap, usdExchangeRates, exchanges, denoms) {
     const medianDenoms = {};
     for (let denomsIdx = 0; denomsIdx < denoms.length; denomsIdx += 1) {
@@ -126,7 +139,7 @@ const InternalFunctions = {
   },
 };
 
-
+// main fetch function
 async function fetchWithFallback(denoms) {
   try {
     const mappedDenoms = InternalFunctions.denomMapper(denoms);
@@ -162,6 +175,7 @@ async function fetchWithFallback(denoms) {
   }
 }
 
+// wrapper function for the CLI fetch command
 function fetch(options) {
   if (options.denom === undefined) {
     throw Error('--denom is required for fetch');

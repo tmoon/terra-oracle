@@ -9,7 +9,7 @@ Oracle feeder is a robust tool that can
 
 ## Installation
 
-1. Install [node.js](https://nodejs.org/en/download/) (10.15+ version recommended) and `npm`
+1. Install [node.js](https://nodejs.org/en/download/) (10.15+ version recommended) and node package manager, `npm` 
 2. Download/clone this repo from `https://github.com/covalent-hq/terra-oracle.git`
 3. run `npm install`  in `terra-oracle` directory: This installs necessary node modules
 4. run `npm link` : registers the `oracle` CLI commands to `bin/oracle`
@@ -30,6 +30,8 @@ Oracle feeder is a robust tool that can
 1. For Dev setup, one can follow the [terra network validator setup](https://docs.terra.money/guide/validators#create-your-validator) and join the [soju-0008](https://github.com/terra-project/networks/tree/master/soju-0008) live testnet by staking some Luna obtained from the faucet
 2. Then run the CLI, optionally with `ENV=prod` e.g. simply `oracle fetch` or  `ENV=prod oracle fetch`
 
+Note: In the final implementation, we did not need any specific flags for dev and prod environment, as prod and dev setups (other than which terra network it connects to) are necessarily identical. 
+
 ## Functionality, Implementation, and Mechanism
 In this section, we discuss how we implemented various functionalities of the oracle feeder.
 
@@ -44,6 +46,11 @@ This infers the crypto exchange rates in two steps:
     1. In this step, first we infer the potential values of the crypto for all exchanges by filling out Matrix 1 using the FxCombined rate in Matrix 3 and get Matrix 4
     2. Finally, we take a median along each column to get the final price of the cryptocurrency.
 <img src="./docs/mat2.png" width="590">
+
+**Expected Output:**
+1. If the CLI call runs without any error, it yields a json with all the denominations as keys and the crypto-fiat rates as values e.g. ```{'ust': 160.2, 'eut': 142.3}```
+2. If CLI finds some denominations that are out of active currencies it shows the values that are in active currency list and then shows a warning showing the denominations that need change
+3. If CLI fails for any other reason, it shows an error message.
 
 Relevant files: `src/fetcher.js, src/forex.js`
 

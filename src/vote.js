@@ -9,7 +9,7 @@ const InternalFunctions = {
 
 module.exports = {
   submitVote: (voteParam) => {
-    if (Object.keys(voteParam).length >= 4) {
+    if (Object.keys(voteParam).length < 4) {
       console.log(CHALK.red("Parameters doesn't match with standard format."));
       return {
         status: 'error',

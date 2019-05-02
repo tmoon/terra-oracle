@@ -35,10 +35,8 @@ As this tool is can be a critical part for the network, we designed this with va
 In this section, 
 ### `fetch`
 
-<img src="./docs/mat1.png" width="200">
-
-![Inference Step of Fetch](docs/mat2.png =250x "Inference Step of Fetch")
-
+<img src="./docs/mat1.png" width="650">
+<img src="./docs/mat2.png" width="650">
 Relevant files: `src/fetcher.js, src/forex.js`
 
 ### `vote`

@@ -1,3 +1,8 @@
+const app = rewire('../src/forex');
+/* eslint-disable */
+const forex = app.__get__('InternalFunctions');
+/* eslint-enable */
+
 const fetcher = require('../src/fetcher');
 const assert = require('assert');
 
@@ -60,9 +65,20 @@ describe('fetcher', () => {
         }
       }
     });
+
     it('should return json with all seven values given in denoms', () => {
       let result = fetcher.getForexExchangeRates(['ust', 'krt', 'sdt', 'cnt', 'jpt', 'eut', 'gbt']);
       assert.equal('ust' in result && 'krt' in result && 'sdt' in result && 'cnt' in result && 'jpt' in result && 'eut' in result && 'gbt' in result && Object.keys(result).length === 7, true);
+      for (var elem in result) {
+        if (result.hasOwnProperty(elem)) {
+          assert.equal(typeof result[elem], 'number');
+        }
+      }
+    });
+
+    it('invalid denoms', () => {
+      let result = fetcher.getForexExchangeRates(['usd', 'nadim']);
+      assert.equal(Object.keys(result).length === 0, true);
       for (var elem in result) {
         if (result.hasOwnProperty(elem)) {
           assert.equal(typeof result[elem], 'number');

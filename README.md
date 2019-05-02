@@ -32,7 +32,8 @@ As this tool is can be a critical part for the network, we designed this with va
 2. Then run the CLI, optionally with `ENV=prod` e.g. simply `oracle fetch` or  `ENV=prod oracle fetch`
 
 ## Functionality, Implmentation, and Mechanism
-In this section, 
+In this section, we discuss how we implemented various functionalities of the oracle feeder.
+
 ### `fetch`
 This infers the crypto exchange rates in two steps:
 1. Fetch Data from APIs: 
@@ -41,14 +42,14 @@ This infers the crypto exchange rates in two steps:
 <img src="./docs/mat1.png" width="600">
 
 2. Infer missing values using FX Data: 
-1. In this step, first we infer the potential values of the crypto for all exchanges by filling out Matrix 1 using the FxCombined rate in Matrix 3 and get Matrix 4
-2. Finally, we take a median along each column to get the final price of the crypto.
+    1. In this step, first we infer the potential values of the crypto for all exchanges by filling out Matrix 1 using the FxCombined rate in Matrix 3 and get Matrix 4
+    2. Finally, we take a median along each column to get the final price of the crypto.
 <img src="./docs/mat2.png" width="590">
 
 Relevant files: `src/fetcher.js, src/forex.js`
 
 ### `vote`
-This submits a `MsgPriceFeed` call to `terracli` (i.e. `terracli tx oracle vote`). Simply implemented with a child process `exec` module.
+This submits a `MsgPriceFeed` call to `terracli` (i.e. `terracli tx oracle vote`). Simply implemented with a child process spawned by the `exec` module.
 
 Relevant file: `src/vote.js`
 

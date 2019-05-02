@@ -20,16 +20,17 @@ Oracle feeder is a robust tool that can
 1. Obviously one need to have `terrad` and `terracli` [installed](https://docs.terra.money/guide/installation) and running to vote
 2. In addition, make sure you have all the necessary node modules
 3. Then before testing/interacting with the CLI, one need to make sure `terracli` is running in either Dev or Prod setup
+4. Now change `src/voter.js` and put the correct `CHAIN_ID` there
 
 ### Dev Setup
-1. For Dev setup, one can follow the [local deployment setup](https://docs.terra.money/guide/deploy-testnet) for Terra with 4 local nodes and run `make localnet-start`
+1. For Dev setup, one can follow the [local deployment setup](https://docs.terra.money/guide/deploy-testnet) for Terra with 1 local node
 2. Then run the CLI with `ENV=dev` e.g. `ENV=dev oracle fetch`
 
 ### Prod Setup
 1. For Dev setup, one can follow the [terra network validator setup](https://docs.terra.money/guide/validators#create-your-validator) and join the [soju-0008](https://github.com/terra-project/networks/tree/master/soju-0008) live testnet by staking some Luna obtained from the faucet
 2. Then run the CLI, optionally with `ENV=prod` e.g. simply `oracle fetch` or  `ENV=prod oracle fetch`
 
-## Functionality, Implmentation, and Mechanism
+## Functionality, Implementation, and Mechanism
 In this section, we discuss how we implemented various functionalities of the oracle feeder.
 
 ### `fetch`

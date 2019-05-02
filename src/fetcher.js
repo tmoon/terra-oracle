@@ -144,11 +144,3 @@ async function fetchWithFallback(denoms) {
 module.exports = {
   fetchWithFallback,
 };
-
-fetchWithFallback(['jpt', 'gbt', 'krt'])
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((e) => {
-    console.log(e);
-  });

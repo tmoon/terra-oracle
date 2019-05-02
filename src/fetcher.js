@@ -13,8 +13,9 @@ const ccxt = require('ccxt');
 const forex = require('./forex');
 const config = require('../config/constant.json');
 
+
 /* eslint-disable */
-const exchanges = {
+const ccxtExchanges = {
   coinmarketcap: new ccxt.coinmarketcap(),
   bitfinex: new ccxt.bitfinex(),
   kraken: new ccxt.kraken(),
@@ -23,12 +24,9 @@ const exchanges = {
 };
 /* eslint-enable */
 
-/* In future, if LUNA is exchanged in some of the exchanges it would be sufficient
-* to change this flag */
 const LUNA = 'ETH';
 
 const InternalFunctions = {
-  // checks to make sure only active/valid denominations are taken
   denomMapper(denoms) {
     const newDenoms = [];
     for (let i = 0; i < denoms.length; i += 1) {
@@ -40,11 +38,10 @@ const InternalFunctions = {
     return newDenoms;
   },
 
-  // pull relevant currency exchange rate using ccxt
   async getRateByExchange(exchange, currency) {
     let rate;
     try {
-      rate = (await exchanges[exchange].fetchTicker(`${LUNA}/${currency}`)).last;
+      rate = (await ccxtExchanges[exchange].fetchTicker(`${LUNA}/${currency}`)).last;
     } catch (e) {
       rate = null;
     }
@@ -55,7 +52,6 @@ const InternalFunctions = {
     };
   },
 
-  // compute median
   getMedian(numbers) {
     const sorted = numbers.slice().sort();
     const middle = Math.floor(sorted.length / 2);
@@ -65,14 +61,12 @@ const InternalFunctions = {
     return sorted[middle];
   },
 
-  // get median values for USD to major foreign currency rates
   async getForexExchangeRates(denoms) {
     const exchangeRates = await forex.getForexRates(denoms);
     const medianRates = {};
     for (let i = 0; i < denoms.length; i += 1) {
       const denom = denoms[i];
       const rates = [];
-      // TODO: num APIs
       for (let j = 0; j < 3; j += 1) {
         if (exchangeRates[j].error === false) {
           rates.push(exchangeRates[j].parsedFXData[denom]);
@@ -82,62 +76,90 @@ const InternalFunctions = {
     }
     return medianRates;
   },
-};
 
-// TODO: refactor and modulerize
-async function fetchWithFallback(denoms) {
-  const mappedDenoms = InternalFunctions.denomMapper(denoms);
-  const denomsWithUSD = mappedDenoms.slice(0);
-  if (denomsWithUSD.includes('USD') === false) {
-    denomsWithUSD.push('USD');
-  }
-
-  const ratePromises = [];
-
-  const exchangeNames = Object.keys(exchanges);
-  for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
-    const exchange = exchangeNames[exchangeNamesIdx];
-    for (let denomsWithUSDIdx = 0; denomsWithUSDIdx < denomsWithUSD.length; denomsWithUSDIdx += 1) {
-      const denom = denomsWithUSD[denomsWithUSDIdx];
-      ratePromises.push(InternalFunctions.getRateByExchange(exchange, denom));
-    }
-  }
-
-  const rateResults = await Promise.all(ratePromises);
-
-  const exchangeCurrencyMap = {};
-  for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
-    const exchange = exchangeNames[exchangeNamesIdx];
-    exchangeCurrencyMap[exchange] = {};
-  }
-
-  for (let rateResultsIdx = 0; rateResultsIdx < rateResults.length; rateResultsIdx += 1) {
-    const rateResult = rateResults[rateResultsIdx];
-    exchangeCurrencyMap[rateResult.exchange][rateResult.currency] = rateResult.rate;
-  }
-
-  const medianDenoms = {};
-  const usdExchangeRates = await InternalFunctions.getForexExchangeRates(denoms);
-
-  for (let mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
-    const denom = mappedDenoms[mappedDenomsIdx];
-    const rates = [];
-    for (let exchangeNamesIdx = 0; exchangeNamesIdx < exchangeNames.length; exchangeNamesIdx += 1) {
-      const exchange = exchangeNames[exchangeNamesIdx];
-      if (exchangeCurrencyMap[exchange][denom] === null) {
-        if (Object.prototype.hasOwnProperty.call(usdExchangeRates, denom)) {
-          const usdInferredExchangeRate = usdExchangeRates[denom
-          ] * exchangeCurrencyMap[exchange].USD;
-          rates.push(usdInferredExchangeRate);
-        }
-      } else {
-        rates.push(exchangeCurrencyMap[exchange][denom]);
+  async getExchangeCurrencyMap(excahnges, denoms) {
+    const ratePromises = [];
+    for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
+      const exchange = excahnges[excahngesIdx];
+      for (let denomsIdx = 0; denomsIdx < denoms.length; denomsIdx += 1) {
+        const denom = denoms[denomsIdx];
+        ratePromises.push(InternalFunctions.getRateByExchange(exchange, denom));
       }
     }
-    medianDenoms[config.FX_CURRENCY_MAP_REVERSE[denom]] = InternalFunctions.getMedian(rates);
-  }
 
-  return medianDenoms;
+    const rateResults = await Promise.all(ratePromises);
+    const exchangeCurrencyMap = {};
+
+    for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
+      const exchange = excahnges[excahngesIdx];
+      exchangeCurrencyMap[exchange] = {};
+    }
+
+    for (let rateResultsIdx = 0; rateResultsIdx < rateResults.length; rateResultsIdx += 1) {
+      const rateResult = rateResults[rateResultsIdx];
+      exchangeCurrencyMap[rateResult.exchange][rateResult.currency] = rateResult.rate;
+    }
+
+    return exchangeCurrencyMap;
+  },
+
+  getMedianRatesWithForexInferredRates(exchangeCurrencyMap, usdExchangeRates, exchanges, denoms) {
+    const medianDenoms = {};
+    for (let denomsIdx = 0; denomsIdx < denoms.length; denomsIdx += 1) {
+      const denom = denoms[denomsIdx];
+      const rates = [];
+      for (let exchangesIdx = 0; exchangesIdx < exchanges.length; exchangesIdx += 1) {
+        const exchange = exchanges[exchangesIdx];
+        if (exchangeCurrencyMap[exchange][denom] === null) {
+          if (Object.prototype.hasOwnProperty.call(usdExchangeRates, denom)) {
+            const usdInferredExchangeRate = usdExchangeRates[denom
+            ] * exchangeCurrencyMap[exchange].USD;
+            rates.push(usdInferredExchangeRate);
+          }
+        } else {
+          rates.push(exchangeCurrencyMap[exchange][denom]);
+        }
+      }
+      medianDenoms[config.FX_CURRENCY_MAP_REVERSE[denom]] = InternalFunctions.getMedian(rates);
+    }
+    return medianDenoms;
+  },
+};
+
+
+async function fetchWithFallback(denoms) {
+  try {
+    const mappedDenoms = InternalFunctions.denomMapper(denoms);
+    const validDenoms = [];
+    for (let mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
+      validDenoms.push(config.FX_CURRENCY_MAP_REVERSE[mappedDenoms[mappedDenomsIdx]]);
+    }
+    const needsSanitization = denoms.filter(x => !validDenoms.includes(x));
+    const denomsWithUSD = mappedDenoms.slice(0);
+    if (denomsWithUSD.includes('USD') === false) {
+      denomsWithUSD.push('USD');
+    }
+    const exchangeNames = Object.keys(ccxtExchanges);
+    const exchangeCurrencyMap = await InternalFunctions.getExchangeCurrencyMap(exchangeNames,
+      denomsWithUSD);
+    const usdExchangeRates = await InternalFunctions.getForexExchangeRates(validDenoms);
+    const result = InternalFunctions.getMedianRatesWithForexInferredRates(exchangeCurrencyMap,
+      usdExchangeRates, exchangeNames, mappedDenoms);
+
+    return {
+      error: false,
+      errorMsg: null,
+      result,
+      needsSanitization,
+    };
+  } catch (e) {
+    return {
+      error: true,
+      errorMsg: e,
+      result: null,
+      needsSanitization: null,
+    };
+  }
 }
 
 function fetch(options) {
@@ -159,12 +181,3 @@ module.exports = {
   fetchWithFallback,
   fetch,
 };
-
-// TODO: remove
-fetchWithFallback(['jpt', 'gbt', 'krt'])
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((e) => {
-    console.log(e);
-  });

@@ -12,8 +12,8 @@ const { submitVoteAsync } = require('./vote.js');
 
 module.exports = {
   run: (options) => {
-    // console.log(options);
-    // console.log(process.cwd());
+    logger.debug(options);
+    logger.debug(process.cwd());
     if (options.interval === undefined) {
       throw Error('interval is necessary for run command');
       // Output with chalk
@@ -52,7 +52,7 @@ module.exports = {
             password: options.password,
           });
           /* eslint-enable */
-          logger.debug('found res', voteRes);
+          logger.info('found res', voteRes);
         } catch (error) {
           logger.error(chalk.red('Error occurred during submitting vote, ', error.message));
         }

@@ -2,6 +2,10 @@ const EXEC = require('child_process').exec;
 const VOTER = require('../config/voter.json');
 const { CLI_CURRENCY_MAP } = require('../config/constant.json');
 
+const InternalFunctions = {
+  convertToMicroUnit: value => value * 1000000,
+};
+
 module.exports = {
   submitVote: (voteParam) => {
     if (Object.keys(voteParam).length !== 2) {
@@ -35,7 +39,8 @@ module.exports = {
       };
     }
 
-    const command = `terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${voteParam.price}" --from ${VOTER.key}`;
+    const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
+    const command = `terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${VOTER.key}`;
 
     EXEC(command, (error, stdOut, stdErr) => {
       if (stdErr !== null) {

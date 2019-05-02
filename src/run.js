@@ -3,6 +3,7 @@ const service = require('service-systemd');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const pm2 = require('pm2');
+const chalk = require('chalk');
 
 const serviceConfig = require('./../config/service.json');
 const pm2Config = require('./../config/pm2.json');
@@ -34,15 +35,20 @@ module.exports = {
 
     cron.schedule(`* */${options.interval} * * *`, async () => {
       console.log(CONSTANT.CLI_CURRENCY_MAP);
-      const currencyList = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
-      const values = await fetchWithFallback(currencyList);
+      const whiteListedCur = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
+      const res = fetchWithFallback(whiteListedCur);
+      const currencyList = Object.keys(res);
       for (let i = 0; i < currencyList.length; i += 1) {
-        const resp = submitVote({
-          denom: currencyList[i],
-          price: values[currencyList[i]],
-        });
-        if (resp.status !== 'success') {
-          throw Error('Error in sumitting values', resp.message, currencyList[i]);
+        try {
+          const voteRes = submitVote({
+            denom: currencyList[i],
+            price: res[currencyList[i]],
+          });
+          if (voteRes.status !== 'success') {
+            console.log('Error in sumitting values', voteRes.message, currencyList[i]);
+          }
+        } catch (error) {
+          console.log(chalk.red('Error occurred during summitting vote, ', error.message));
         }
       }
     });
@@ -52,7 +58,7 @@ module.exports = {
     console.log(options);
     console.log(process.cwd());
     if (options.interval === undefined) {
-      throw Error('interval is necessary for run command');
+      console.log(chalk.red('please provide --interval options'));
     }
 
     serviceConfig.cwd = process.cwd();
@@ -90,7 +96,7 @@ module.exports = {
   },
   runDaemonPM2: (options) => {
     if (options.interval === undefined) {
-      throw Error('interval is necessary for run command');
+      console.log(chalk.red('please provide --interval options'));
     }
     pm2Config.args = [options.interval];
     pm2Config.cwd = process.cwd();
@@ -99,16 +105,14 @@ module.exports = {
 
     pm2.connect((err) => {
       if (err) {
-        console.log(err);
-        throw Error('Found Errors ', err);
+        console.log(chalk.red('Error in pm2 connection. ', err));
       }
 
       pm2.start(pm2Config, (err1, apps) => {
         console.log(apps);
         pm2.disconnect();
         if (err1) {
-          console.log(err1);
-          throw err1;
+          console.log(chalk.red('Error in pm2 init. ', err));
         }
       });
     });
@@ -116,16 +120,14 @@ module.exports = {
   removeDaemonPM2: () => {
     pm2.connect((err) => {
       if (err) {
-        console.log(err);
-        throw Error('Found Errors', err);
+        console.log(chalk.red('Error in pm2 connection. ', err));
       }
 
       pm2.delete('oracle-feeder', (err1, apps) => {
         console.log(apps);
         pm2.disconnect();
         if (err1) {
-          console.log(err1);
-          throw Error('Found errors', err1);
+          console.log(chalk.red('Error in pm2 init. ', err));
         }
       });
     });

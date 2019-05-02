@@ -1,6 +1,10 @@
 const arg = require('arg');
+const chalk = require('chalk');
 const { help } = require('./help');
-const { runDaemonPM2, removeDaemonPM2 } = require('./run.js');
+const { runDaemonPM2, removeDaemonPM2 } = require('./run');
+const { fetch } = require('./fetcher');
+const { submitVote } = require('./vote');
+
 
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg({
@@ -36,6 +40,12 @@ module.exports = {
       runDaemonPM2(options);
     } else if (options.command === 'rm') {
       removeDaemonPM2();
+    } else if (options.command === 'fetch') {
+      fetch(options);
+    } else if (options.command === 'vote') {
+      submitVote(options);
+    } else {
+      console.log(chalk.red('Invalid format please check --help for available options.'));
     }
   },
 };

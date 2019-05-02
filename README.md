@@ -16,7 +16,7 @@ Oracle feeder is a robust tool that can
 5. If you haven't already, please install [Terra](https://docs.terra.money/guide/installation)
 
 
-## Dependencies and Setups for Terra
+## Dependencies and Setups
 1. Obviously one need to have `terrad` and `terracli` [installed](https://docs.terra.money/guide/installation) and running to vote
 2. In addition, make sure you have all the necessary node modules
 3. Then before testing/interacting with the CLI, one need to make sure `terracli` is running in either Dev or Prod setup
@@ -62,6 +62,12 @@ Relevant file: `src/vote.js`
 ### `run`
 This is a combination of the `fetch` and `vote` functions. This creates a persistent daemon with `pm2` which fetches relevant values and votes in every pre-specificed time interval (default: 15 mins).
 
+**Some Tidbits:**
+1. We log the voting history with timestamp, currency, price, and the tx hash/errors
+2. One can check the logs with `tail -f log/output-<NUM>.log` or `tail -f log/error-<NUM>.log`.
+3. We take care of log rotation with `pm2`
+4. One can use the `./node_modules/pm2/bin/pm2 -h` to check everything they can do with pm2! Especially, `./node_modules/pm2/bin/pm2 ls` to check the status of the running process.
+
 Relevant file: `src/run.js`
 
 ### `rm`
@@ -84,6 +90,7 @@ CLI parser implemented on file: `src/cli.js`. It serves to just pass through the
 2. While we chose 5 major crypto exchanges and they have decent uptime, in case, a coin is listed in very few exchanges, downtime in those exchange APIs could stop this program from working. We could use a caching system. However, as we know crypto and forex both could be volatile and depending on stale-values is not a great idea.
 3. While we have tried to write various unit tests, due to time limitation our test coverage is not extremely high. All the relevant tests are in `test/` directory.
 4. Currently we assume that the `terracli` and the running validator node are persistent. We could also add those commands to process monitor in `pm2`.
+5. In addition, we have noticed that if we try to vote too quicky without a block reaching finality, tendermint throws some obsecure `"signature verification failed"` message (Code 4). We are not certain whether there is an easy way to check finality of the latest block (and it might be beyond the scope of this proejct). So we simply used 5 seconds sleep before each voting to assure that we are not getting this signature verification issue. Another way could be using the return value from the voting and then using some back-off techniques to wait before commiting the vote.
 
 ## Reference: Other Docs
 1. [Contribution Doc](https://docs.google.com/document/d/1XBflvlwCAIu4vStYvXpmJELSXn7Mo5nBkWhAV-nwG_s/edit?usp=sharing): In this doc, we mention the contribution of each member

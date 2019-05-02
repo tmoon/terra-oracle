@@ -15,27 +15,27 @@ describe('Array', () => {
 });
 
 describe('fetcher', () => {
-
   describe('#fetchWithFallback()', () => {
-
     it('should return json with values given in denoms', async () => {
-      let result = await app.fetchWithFallback(['ust', 'jpt']);
-      result = result.result;
+      const tmp = await app.fetchWithFallback(['ust', 'jpt']);
+      const { result } = tmp;
       console.log(result);
       assert.equal('ust' in result && 'jpt' in result && Object.keys(result).length === 2, true);
-      for (var elem in result) {
-        if (result.hasOwnProperty(elem)) {
+      for (let i = 0; i < result.length; i += 1) {
+        const elem = result[i];
+        if (Object.prototype.hasOwnProperty.call(result, elem)) {
           assert.equal(typeof result[elem] === 'number', true);
         }
       }
     });
     it('should return json with all seven values given in denoms', async () => {
-      let result = await app.fetchWithFallback(['ust', 'krt', 'cnt', 'jpt', 'eut', 'gbt']);
-      result = result.result;
+      const tmp = await app.fetchWithFallback(['ust', 'krt', 'cnt', 'jpt', 'eut', 'gbt']);
+      const { result } = tmp;
       console.log(result);
       assert.equal('ust' in result && 'krt' in result && 'cnt' in result && 'jpt' in result && 'eut' in result && 'gbt' in result && Object.keys(result).length === 6, true);
-      for (var elem in result) {
-        if (result.hasOwnProperty(elem)) {
+      for (let i = 0; i < result.length; i += 1) {
+        const elem = result[i];
+        if (Object.prototype.hasOwnProperty.call(result, elem)) {
           assert.equal(typeof result[elem] === 'number', true);
         }
       }
@@ -62,26 +62,27 @@ describe('fetcher', () => {
 
   describe('#getForexExchangeRates()', () => {
     it('should return json with values given in denoms', async () => {
-      let result = await fetcher.getForexExchangeRates(['ust', 'jpt']);
+      const result = await fetcher.getForexExchangeRates(['ust', 'jpt']);
       console.log(result);
-      assert.equal('ust' in result && 'jpt' in result && Object.keys(result).length === 2, true);
-      for (var elem in result) {
-        if (result.hasOwnProperty(elem)) {
+      assert.equal('USD' in result && 'JPY' in result && Object.keys(result).length === 2, true);
+      for (let i = 0; i < result.length; i += 1) {
+        const elem = result[i];
+        if (Object.prototype.hasOwnProperty.call(result, elem)) {
           assert.equal(typeof result[elem], 'number');
         }
       }
     });
 
     it('should return json with all seven values given in denoms', async () => {
-      let result = await fetcher.getForexExchangeRates(['ust', 'krt', 'cnt', 'jpt', 'eut', 'gbt']);
+      const result = await fetcher.getForexExchangeRates(['ust', 'krt', 'cnt', 'jpt', 'eut', 'gbt']);
       console.log(result);
-      assert.equal('ust' in result && 'krt' in result && 'cnt' in result && 'jpt' in result && 'eut' in result && 'gbt' in result && Object.keys(result).length === 6, true);
-      for (var elem in result) {
-        if (result.hasOwnProperty(elem)) {
+      assert.equal('USD' in result && 'KRW' in result && 'CNY' in result && 'JPY' in result && 'EUR' in result && 'GBP' in result && Object.keys(result).length === 6, true);
+      for (let i = 0; i < result.length; i += 1) {
+        const elem = result[i];
+        if (Object.prototype.hasOwnProperty.call(result, elem)) {
           assert.equal(typeof result[elem], 'number');
         }
       }
     });
   });
 });
-

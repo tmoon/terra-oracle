@@ -63,8 +63,8 @@ describe('fetcher', () => {
   describe('#getForexExchangeRates()', () => {
     it('should return json with values given in denoms', async () => {
       let result = await fetcher.getForexExchangeRates(['ust', 'jpt']);
+      console.log(result);
       assert.equal('ust' in result && 'jpt' in result && Object.keys(result).length === 2, true);
-      result = result.result;
       for (var elem in result) {
         if (result.hasOwnProperty(elem)) {
           assert.equal(typeof result[elem], 'number');
@@ -74,8 +74,8 @@ describe('fetcher', () => {
 
     it('should return json with all seven values given in denoms', async () => {
       let result = await fetcher.getForexExchangeRates(['ust', 'krt', 'cnt', 'jpt', 'eut', 'gbt']);
+      console.log(result);
       assert.equal('ust' in result && 'krt' in result && 'cnt' in result && 'jpt' in result && 'eut' in result && 'gbt' in result && Object.keys(result).length === 6, true);
-      result = result.result;
       for (var elem in result) {
         if (result.hasOwnProperty(elem)) {
           assert.equal(typeof result[elem], 'number');

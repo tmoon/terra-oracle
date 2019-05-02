@@ -65,6 +65,6 @@ const sections = [
 module.exports = {
   help: () => {
     const usage = commandLineUsage(sections);
-    console.log(usage);
+    console.log(chalk.green(usage));
   },
 };

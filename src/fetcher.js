@@ -9,6 +9,7 @@
 */
 
 const ccxt = require('ccxt');
+const chalk = require('chalk');
 const forex = require('./forex');
 const config = require('../config/constant.json');
 
@@ -147,8 +148,8 @@ module.exports = {
 // TODO: remove
 fetchWithFallback(['jpt', 'gbt', 'krt'])
   .then((res) => {
-    console.log(res);
+    console.log(chalk.green(res));
   })
   .catch((e) => {
-    console.log(e);
+    console.log(chalk.red(e));
   });

@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const service = require('service-systemd');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const chalk = require('chalk');
 const pm2 = require('pm2');
 
 const serviceConfig = require('./../config/service.json');
@@ -14,10 +15,10 @@ const { submitVote } = require('./vote.js');
 
 module.exports = {
   run: (options) => {
-    console.log(options);
-    console.log(process.cwd());
+    console.log(chalk.green(options));
+    console.log(chalk.green(process.cwd()));
     if (options.interval === undefined) {
-      throw Error('interval is necessary for run command');
+      console.log(chalk.red('interval is necessary for run command!'));
       // Output with chalk
     }
 
@@ -42,22 +43,21 @@ module.exports = {
           price: values[currencyList[i]],
         });
         if (resp.status !== 'success') {
-          throw Error('Error in sumitting values', resp.message, currencyList[i]);
+          console.log(chalk.red('Error in sumitting values', resp.message, currencyList[i]));
         }
       }
     });
-    console.log('done');
+    console.log(chalk.green('done'));
   },
   addDaemon: (options) => {
-    console.log(options);
-    console.log(process.cwd());
+    console.log(chalk.green(options));
+    console.log(chalk.green(process.cwd()));
     if (options.interval === undefined) {
-      throw Error('interval is necessary for run command');
+      console.log(chalk.red('interval is necessary for run command'));
     }
-
     serviceConfig.cwd = process.cwd();
     serviceConfig['app.args'] = options.interval;
-    console.log(serviceConfig);
+    console.log(chalk.green(serviceConfig));
 
     exec('which node')
       .then((resp) => {
@@ -68,24 +68,24 @@ module.exports = {
         serviceConfig['engine.bin'] = resp.stdout.trim();
         return service.add(serviceConfig);
       }).then((success) => {
-        console.log('successfully added service ', success);
+        console.log(chalk.green('successfully added service ', success));
         return exec(`service ${serviceConfig.name} start`);
       }).then((success) => {
-        console.log('successfully start service ', success);
+        console.log(chalk.green('successfully start service ', success));
       })
       .catch((err) => {
-        console.log('Error occurred ', err);
+        console.log(chalk.red('Error occurred ', err));
       });
   },
   removeDaemon: () => {
     service.remove(serviceConfig.name)
       .then((success) => {
-        console.log('Successfully remove service ', success);
+        console.log(chalk.green('Successfully remove service ', success));
         return exec(`systemctl daemon-reload && service ${serviceConfig.name} stop`);
       }).then((success) => {
-        console.log('Successfully relaod daemon.', success);
+        console.log(chalk.green('Successfully relaod daemon.', success));
       }).catch((err) => {
-        console.log('Error occurred', err);
+        console.log(chalk.red('Error occurred ', err));
       });
   },
   runDaemonPM2: (options) => {
@@ -134,7 +134,7 @@ module.exports = {
 
 if (require.main === module) {
   if (process.argv.length < 3) {
-    throw Error('Need the interval params');
+    console.log(chalk.red('Need the interval params'));
   }
   const args = process.argv.slice(2);
   const interval = Number(args[0]);

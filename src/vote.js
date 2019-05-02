@@ -78,11 +78,10 @@ module.exports = {
     }
     this.submitVoteAsync(voteParam)
       .then((result) => {
-        console.log('Successfully Voted!!');
-        console.log(result);
+        console.log(chalk.green('Successfully Voted!!', result));
       })
       .catch((err) => {
-        console.log(err);
+        console.log(chalk.red(err));
       });
     return {
       status: 'error',

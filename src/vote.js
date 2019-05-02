@@ -65,6 +65,7 @@ module.exports = {
     const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
 
     EXEC(command, (error, stdOut, stdErr) => {
+      console.log(error, stdOut, stdErr)
       if (stdErr !== null) {
         console.log(CHALK.red(stdErr));
         return {

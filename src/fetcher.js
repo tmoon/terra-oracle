@@ -77,7 +77,7 @@ const InternalFunctions = {
     }
 
     const rateResults = await Promise.all(ratePromises);
-    let exchangeCurrencyMap = {};
+    const exchangeCurrencyMap = {};
 
     for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
       const exchange = excahnges[excahngesIdx];
@@ -92,8 +92,8 @@ const InternalFunctions = {
     return exchangeCurrencyMap;
   },
 
-  getMedianRatesWithForexInferredRates(exchangeCurrencyMap, usdExchangeRates, exchanges, denoms){
-    let medianDenoms = {};
+  getMedianRatesWithForexInferredRates(exchangeCurrencyMap, usdExchangeRates, exchanges, denoms) {
+    const medianDenoms = {};
     for (let denomsIdx = 0; denomsIdx < denoms.length; denomsIdx += 1) {
       const denom = denoms[denomsIdx];
       const rates = [];
@@ -112,7 +112,7 @@ const InternalFunctions = {
       medianDenoms[config.FX_CURRENCY_MAP_REVERSE[denom]] = InternalFunctions.getMedian(rates);
     }
     return medianDenoms;
-  }
+  },
 };
 
 
@@ -123,9 +123,11 @@ async function fetchWithFallback(denoms) {
     denomsWithUSD.push('USD');
   }
   const exchangeNames = Object.keys(ccxtExchanges);
-  const exchangeCurrencyMap = await InternalFunctions.getExchangeCurrencyMap(exchangeNames, denomsWithUSD);
+  const exchangeCurrencyMap = await InternalFunctions.getExchangeCurrencyMap(exchangeNames,
+    denomsWithUSD);
   const usdExchangeRates = await InternalFunctions.getForexExchangeRates(denoms);
-  return InternalFunctions.getMedianRatesWithForexInferredRates(exchangeCurrencyMap, usdExchangeRates, exchangeNames, mappedDenoms);
+  return InternalFunctions.getMedianRatesWithForexInferredRates(exchangeCurrencyMap,
+    usdExchangeRates, exchangeNames, mappedDenoms);
 }
 
 

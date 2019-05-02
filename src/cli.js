@@ -24,7 +24,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     price: args['--price'] || undefined,
     key: args['--key'] || undefined,
     password: args['--pw'] || undefined,
-    interval: args['--interval'] || undefined,
+    interval: args['--interval'] || 15,
     help: args['--help'] || false,
     command: args._[0],
   };

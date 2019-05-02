@@ -76,24 +76,14 @@ module.exports = {
         message: '"pw" flag is missed in command',
       };
     }
-
-    const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
-    const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${VOTER.CHAIN_ID} -y`;
-
-    exec(command, (error, stdOut, stdErr) => {
-      if (error !== null) {
-        console.log(CHALK.red(stdErr));
-        return {
-          status: 'error',
-          message: stdErr,
-        };
-      }
-      console.log('Successfully Voted!!', stdOut);
-      return {
-        status: 'succeed',
-        message: stdOut,
-      };
-    });
+    this.submitVoteAsync(voteParam)
+      .then((result) => {
+        console.log('Successfully Voted!!');
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     return {
       status: 'error',
       message: 'Invalid State',

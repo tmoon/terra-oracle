@@ -35,8 +35,9 @@ As this tool is can be a critical part for the network, we designed this with va
 In this section, 
 ### `fetch`
 
-![Data Pull Step of Fetch](docs/mat1?raw=true "Data Pull Step of Fetch")
-![Inference Step of Fetch](docs/mat1?raw=true "Inference Step of Fetch")
+<img src="./docs/mat1.png" width="200">
+
+![Inference Step of Fetch](docs/mat2.png =250x "Inference Step of Fetch")
 
 Relevant files: `src/fetcher.js, src/forex.js`
 

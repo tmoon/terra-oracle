@@ -48,7 +48,7 @@ module.exports = {
       logger.info(result);
       logger.info(currencyList);
       for (let i = 0; i < currencyList.length; i += 1) {
-        logger.debug('currency calling ', i);
+        // logger.debug('currency calling ', i);
         try {
           /* eslint-disable */
           const voteRes = await submitVoteAsync({
@@ -59,6 +59,7 @@ module.exports = {
           });
           await sleep(5000);
           /* eslint-enable */
+          logger.info(`denom: ${currencyList[i]} price: ${result[currencyList[i]]}`);
           logger.info('found res', voteRes);
         } catch (error) {
           logger.error(chalk.red('Error occurred during submitting vote, ', error.message));
@@ -68,17 +69,17 @@ module.exports = {
   },
   runDaemonPM2: (options) => {
     if (options.interval === undefined) {
-      logger.error(chalk.red('please provide --interval options'));
+      console.log(chalk.red('please provide --interval options'));
       return;
     }
 
     if (options.key === undefined) {
-      logger.error(chalk.red('please provide --key options'));
+      console.log(chalk.red('please provide --key options'));
       return;
     }
 
     if (options.password === undefined) {
-      logger.error(chalk.red('please provide --pw options'));
+      console.log(chalk.red('please provide --pw options'));
       return;
     }
 
@@ -89,15 +90,15 @@ module.exports = {
 
     pm2.connect((err) => {
       if (err) {
-        logger.error(chalk.red('Error in pm2 connection. ', err));
+        console.log(chalk.red('Error in pm2 connection. ', err));
       }
 
       pm2.start(pm2Config, (err1, apps) => {
         pm2.disconnect();
         if (err1) {
-          logger.error(chalk.red('Error in pm2 init. ', err, apps));
+          console.log(chalk.red('Error in pm2 init. ', err, apps));
         } else {
-          logger.info('Successfully added daemon.');
+          console.log('Successfully added daemon.');
         }
       });
     });
@@ -105,15 +106,15 @@ module.exports = {
   removeDaemonPM2: () => {
     pm2.connect((err) => {
       if (err) {
-        logger.error(chalk.red('Error in pm2 connection. ', err));
+        console.log(chalk.red('Error in pm2 connection. ', err));
       }
 
       pm2.delete('oracle-feeder', (err1, apps) => {
         pm2.disconnect();
         if (err1) {
-          logger.error(chalk.red('Error in pm2 init. ', err, apps));
+          console.log(chalk.red('Error in pm2 init. ', err, apps));
         } else {
-          logger.info('Successfylly removed daemon.');
+          console.log('Successfylly removed daemon.');
         }
       });
     });

@@ -11,8 +11,8 @@ const { submitVote } = require('./vote.js');
 
 module.exports = {
   run: (options) => {
-    console.log(options);
-    console.log(process.cwd());
+    // console.log(options);
+    // console.log(process.cwd());
     if (options.interval === undefined) {
       throw Error('interval is necessary for run command');
       // Output with chalk
@@ -34,7 +34,10 @@ module.exports = {
       const whiteListedCur = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
       const res = fetchWithFallback(whiteListedCur);
       const currencyList = Object.keys(res);
+      console.log(res);
+      console.log(currencyList);
       for (let i = 0; i < currencyList.length; i += 1) {
+        console.log('currency calling ', i);
         try {
           const voteRes = submitVote({
             denom: currencyList[i],
@@ -42,6 +45,7 @@ module.exports = {
             key: options.key,
             password: options.password,
           });
+          console.log('found res', voteRes);
           if (voteRes.status !== 'success') {
             console.log('Error in sumitting values', voteRes.message, currencyList[i]);
           } else {

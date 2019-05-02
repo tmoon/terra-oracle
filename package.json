@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 20000",
     "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js",
     "lint-fix": "./node_modules/eslint/bin/eslint.js --fix src/*.js test/*.js"
   },
@@ -31,6 +31,7 @@
     "pm2": "^3.5.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "rewire": "^4.0.1",
     "service-systemd": "^3.4.1"
   },
   "devDependencies": {

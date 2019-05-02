@@ -1,5 +1,9 @@
 const assert = require('assert');
+const rewire = require('rewire');
 const { submitVote } = require('../src/vote');
+/* eslint-disable */
+const voteInternal = rewire('../src/vote').__get__('InternalFunctions');
+/* eslint-enable */
 
 describe('Voting Tests', () => {
   describe('#submitVote(voteParam)', () => {
@@ -26,6 +30,16 @@ describe('Voting Tests', () => {
     it('Should return succeed', () => {
       const result = submitVote({ denom: 'ust', price: 114.7 });
       assert.equal(result.status === 'succeed' && result.message === '', true);
+    });
+  });
+  describe('Internal Function: $convertToMicroUnit', () => {
+    it('Should return 1000000 times for each input', () => {
+      const result = voteInternal.convertToMicroUnit(7);
+      assert.equal(result === 7000000, true);
+    });
+    it('Should return 1000000 times for each input [double]', () => {
+      const result = voteInternal.convertToMicroUnit(0.123456);
+      assert.equal(result === 123456, true);
     });
   });
 });

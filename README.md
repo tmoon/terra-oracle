@@ -12,7 +12,7 @@ Oracle feeder is a robust tool that can
 1. Install [node.js](https://nodejs.org/en/download/) (10.15+ version recommended) and node package manager, `npm` 
 2. Download/clone this repo from `https://github.com/covalent-hq/terra-oracle.git`
 3. run `npm install`  in `terra-oracle` directory: This installs necessary node modules
-4. run `npm link` : registers the `oracle` CLI commands to `bin/oracle`
+4. run `sudo npm link` : registers the `oracle` CLI command to `bin/oracle`
 5. If you haven't already, please install [Terra](https://docs.terra.money/guide/installation)
 
 

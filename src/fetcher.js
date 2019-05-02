@@ -129,11 +129,11 @@ const InternalFunctions = {
 async function fetchWithFallback(denoms) {
   try {
     const mappedDenoms = InternalFunctions.denomMapper(denoms);
-    let validDenoms = [];
-    for(var mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
+    const validDenoms = [];
+    for (let mappedDenomsIdx = 0; mappedDenomsIdx < mappedDenoms.length; mappedDenomsIdx += 1) {
       validDenoms.push(config.FX_CURRENCY_MAP_REVERSE[mappedDenoms[mappedDenomsIdx]]);
     }
-    const needsSanitization = denoms.filter(x => ! validDenoms.includes(x));
+    const needsSanitization = denoms.filter(x => !validDenoms.includes(x));
     const denomsWithUSD = mappedDenoms.slice(0);
     if (denomsWithUSD.includes('USD') === false) {
       denomsWithUSD.push('USD');
@@ -144,21 +144,20 @@ async function fetchWithFallback(denoms) {
     const usdExchangeRates = await InternalFunctions.getForexExchangeRates(validDenoms);
     const result = InternalFunctions.getMedianRatesWithForexInferredRates(exchangeCurrencyMap,
       usdExchangeRates, exchangeNames, mappedDenoms);
-    
+
     return {
       error: false,
       errorMsg: null,
       result,
-      needsSanitization
-    }
-  }
-  catch(e){
+      needsSanitization,
+    };
+  } catch (e) {
     return {
       error: true,
       errorMsg: e,
       result: null,
       needsSanitization: null,
-    }
+    };
   }
 }
 

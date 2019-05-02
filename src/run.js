@@ -32,7 +32,7 @@ module.exports = {
     cron.schedule(`* */${options.interval} * * *`, async () => {
       console.log(CONSTANT.CLI_CURRENCY_MAP);
       const whiteListedCur = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
-      const res = fetchWithFallback(whiteListedCur);
+      const res = await fetchWithFallback(whiteListedCur);
       const currencyList = Object.keys(res);
       console.log(res);
       console.log(currencyList);

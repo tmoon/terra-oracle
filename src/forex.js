@@ -1,6 +1,9 @@
+/** This file contains critical functions for pulling data from 3 forex APIs.
+* Upon getting those, fetcher takes those values and computes median to get combined FX rates
+*/
+
 const request = require('request-promise');
 const config = require('../config/constant.json');
-
 
 const InternalFunctions = {
   getCurrencyFromDenom(denom) {
@@ -21,7 +24,6 @@ const InternalFunctions = {
       currencyString = denoms.map(denom => InternalFunctions.getCurrencyFromDenom(denom)).join(',');
     }
 
-    // const APIDictKey = ;
     const finalUrl = config[`FX_API${apiNum}`].url + currencyString;
 
     return finalUrl;
@@ -57,12 +59,16 @@ const InternalFunctions = {
   parseAPIData(data, key, apiNum) {
     let res = null;
 
-    if (apiNum === 0) {
-      res = data.rates[key].rate;
-    } else if (apiNum === 1) {
-      res = data.rates[key];
-    } else if (apiNum === 2) {
-      res = data[key];
+    try {
+      if (apiNum === 0) {
+        res = data.rates[key].rate;
+      } else if (apiNum === 1) {
+        res = data.rates[key];
+      } else if (apiNum === 2) {
+        res = data[key];
+      }
+    } catch (error) {
+      res = null;
     }
 
     return res;
@@ -76,7 +82,7 @@ const InternalFunctions = {
     if (!res.error) {
       const data = res.jsonData;
 
-      const finalFXData = {};
+      let finalFXData = {};
       for (let i = denoms.length - 1; i >= 0; i -= 1) {
         const denom = denoms[i];
         finalFXData[denom] = InternalFunctions.parseAPIData(data, denomToKey[denom], apiNum);
@@ -89,14 +95,17 @@ const InternalFunctions = {
 };
 
 async function getForexRates(denoms) {
-  const promises = [];
+  let promises = [];
   for (let i = 0; i < 3; i += 1) {
     promises.push(InternalFunctions.getAPIData(denoms, i));
   }
   const res = await Promise.all(promises);
+
   return res;
 }
 
 module.exports = {
   getForexRates,
 };
+
+// getForexRates(['jpt', 'ust']).then(x => console.log(x))

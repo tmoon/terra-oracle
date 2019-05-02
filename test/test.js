@@ -1,10 +1,12 @@
+const assert = require('assert');
+const rewire = require('rewire');
+
 const app = rewire('../src/forex');
 /* eslint-disable */
 const forex = app.__get__('InternalFunctions');
 /* eslint-enable */
 
 const fetcher = require('../src/fetcher');
-const assert = require('assert');
 
 describe('Array', () => {
   describe('#indexOf()', () => {

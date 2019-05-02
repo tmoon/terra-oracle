@@ -6,7 +6,7 @@ const pm2Config = require('./../config/pm2.json');
 const CONSTANT = require('./../config/constant.json');
 
 const { fetchWithFallback } = require('./fetcher');
-const { submitVote } = require('./vote.js');
+const { submitVoteAsync } = require('./vote.js');
 
 
 module.exports = {
@@ -43,18 +43,15 @@ module.exports = {
       for (let i = 0; i < currencyList.length; i += 1) {
         console.log('currency calling ', i);
         try {
-          const voteRes = submitVote({
+          /* eslint-disable */
+          const voteRes = await submitVoteAsync({
             denom: currencyList[i],
             price: result[currencyList[i]],
             key: options.key,
             password: options.password,
           });
+          /* eslint-enable */
           console.log('found res', voteRes);
-          if (voteRes.status !== 'success') {
-            console.log('Error in sumitting values', voteRes.message, currencyList[i]);
-          } else {
-            console.log('Voting success', voteRes);
-          }
         } catch (error) {
           console.log(chalk.red('Error occurred during submitting vote, ', error.message));
         }

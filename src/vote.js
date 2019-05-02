@@ -76,7 +76,7 @@ module.exports = {
         message: '"pw" flag is missed in command',
       };
     }
-    this.submitVoteAsync(voteParam)
+    module.exports.submitVoteAsync(voteParam)
       .then((result) => {
         console.log(chalk.green('Successfully Voted!!', result));
       })

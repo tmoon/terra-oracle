@@ -36,7 +36,6 @@ module.exports = {
     if (options.help) {
       help();
     } else if (options.command === 'run') {
-      console.log(options);
       runDaemonPM2(options);
     } else if (options.command === 'rm') {
       removeDaemonPM2();

@@ -39,7 +39,7 @@ describe('Voting Tests', () => {
     //   const result = submitVote({
     //     denom: 'ust', price: 114.7, key: 'thisIskey', password: 'password',
     //   });
-    //   assert.equal(result.status === 'succeed' && result.message === '', true);
+    //   assert.equal(result.status === 'succeed', true);
     // });
   });
   describe('Internal Function: $convertToMicroUnit', () => {

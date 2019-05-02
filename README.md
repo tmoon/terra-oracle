@@ -78,8 +78,8 @@ CLI parser implemented on file: `src/cli.js`. It serves to just pass through the
 4. Currently we assume that the `terracli` and the running validator node are persistent. We could also add those commands to process monitor in `pm2`.
 
 ## Reference: Other Docs
-1. [Contribution Doc](https://docs.google.com/document/d/1XBflvlwCAIu4vStYvXpmJELSXn7Mo5nBkWhAV-nwG_s/edit?usp=sharing): In this doc, we mention the contribution each member of the team had 
-2. [Design Thought Process Doc](https://docs.google.com/document/d/1j4CegCqznDU2MjRCjnOP-XyCotwW3P9cTsbuAbatiPg/edit?usp=sharing): While we explain most of our functionality in the README, we went through two phases p0 and p1 for development. In this doc, we explain the evolution of the design process during those two steps.
+1. [Contribution Doc](https://docs.google.com/document/d/1XBflvlwCAIu4vStYvXpmJELSXn7Mo5nBkWhAV-nwG_s/edit?usp=sharing): In this doc, we mention the contribution of each member
+2. [Design Thought Process Doc](https://docs.google.com/document/d/1j4CegCqznDU2MjRCjnOP-XyCotwW3P9cTsbuAbatiPg/edit?usp=sharing): While we explain most of our functionality in this README, we went through two phases--p0 and p1 for development. In this doc, we explain the evolution of the design process during those two steps.
 
 ## Reference: Interfaces 
 
@@ -94,6 +94,7 @@ oracle [command]
 Available Commands:
 fetch       Fetch the current price of luna. If denom is not specified, fetches the prices in all available denoms
 run         Runs in daemon mode. Runs periodically (constrained by the interval command) to fetch and vote to the chain
+rm          Removes the persistent daemon
 vote        Transactions subcommands
 
 Flags:

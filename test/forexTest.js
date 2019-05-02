@@ -37,19 +37,19 @@ describe('Forex Internal Functions Unit Testing', () => {
     });
   });
   describe('#getDataFromAPI(denoms, apiNum)', () => {
-    it('Retrive data from api', async () => {
+    it('Retrive data from api 2', async () => {
       const result = await forex.getDataFromAPI(['eut', 'jpt'], 2);
       assert.equal(Object.keys(result.jsonData) === ['EUR', 'JPY'], true);
     });
   });
   describe('#getDenomToKey(denoms, apiNum)', () => {
-    it('Should return json object', () => {
+    it('Should return json object from api 0', () => {
       const result = forex.getDenomToKey(['cnt', 'krt'], 0);
       assert.equal(result === { cnt: 'USDCNY', krt: 'USDKRW' }, true);
     });
   });
   describe('#getAPIData(denoms, apiNum)', () => {
-    it('Should return json object', async () => {
+    it('Should return json object from api 2', async () => {
       const result = await forex.getAPIData(['ust', 'jpt'], 2);
       assert.equal(Object.keys(result.parsedFXData) === ['USD', 'JPY'], true);
     });

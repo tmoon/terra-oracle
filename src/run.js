@@ -44,9 +44,11 @@ module.exports = {
           });
           if (voteRes.status !== 'success') {
             console.log('Error in sumitting values', voteRes.message, currencyList[i]);
+          } else {
+            console.log('Voting success', voteRes);
           }
         } catch (error) {
-          console.log(chalk.red('Error occurred during summitting vote, ', error.message));
+          console.log(chalk.red('Error occurred during submitting vote, ', error.message));
         }
       }
     });

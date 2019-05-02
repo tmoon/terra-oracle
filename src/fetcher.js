@@ -53,7 +53,7 @@ const InternalFunctions = {
   },
 
   getMedian(numbers) {
-    const sorted = numbers.slice().sort();
+    const sorted = numbers.sort((a, b) => a - b);
     const middle = Math.floor(sorted.length / 2);
     if (sorted.length % 2 === 0) {
       return (sorted[middle - 1] + sorted[middle]) / 2;
@@ -155,7 +155,7 @@ async function fetchWithFallback(denoms) {
   } catch (e) {
     return {
       error: true,
-      errorMsg: e,
+      errorMsg: e.message,
       result: null,
       needsSanitization: null,
     };
@@ -171,7 +171,14 @@ function fetch(options) {
 
   fetchWithFallback(denoms)
     .then((res) => {
-      console.log(chalk.blue(JSON.stringify(res, null, 2)));
+      if (res.error === true) {
+        console.log(chalk.red('Error in fetch: ', res.errorMsg));
+      } else {
+        if (res.needsSanitization.length > 0) {
+          console.log(chalk.yellow(`Warning: These denoms are not valid -> ${res.needsSanitization.toString()}`));
+        }
+        console.log(res.result);
+      }
     }).catch((err) => {
       console.log(chalk.red('Error in fetch: ', err));
     });

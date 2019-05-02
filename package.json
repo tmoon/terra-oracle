@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 15000",
     "lint": "./node_modules/eslint/bin/eslint.js src/*.js test/*.js",
     "lint-fix": "./node_modules/eslint/bin/eslint.js --fix src/*.js test/*.js"
   },

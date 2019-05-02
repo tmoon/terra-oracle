@@ -58,7 +58,11 @@ const InternalFunctions = {
 
   // compute median
   getMedian(numbers) {
-    const sorted = numbers.sort((a, b) => a - b);
+    const numbersFiltered = numbers.filter(x => typeof (x) === 'number' && !Number.isNaN(x));
+    if (numbersFiltered.length === 0) {
+      return null;
+    }
+    const sorted = numbersFiltered.sort((a, b) => a - b);
     const middle = Math.floor(sorted.length / 2);
     if (sorted.length % 2 === 0) {
       return (sorted[middle - 1] + sorted[middle]) / 2;
@@ -125,9 +129,12 @@ const InternalFunctions = {
         const exchange = exchanges[exchangesIdx];
         if (exchangeCurrencyMap[exchange][denom] === null) {
           if (Object.prototype.hasOwnProperty.call(usdExchangeRates, denom)) {
-            const usdInferredExchangeRate = usdExchangeRates[denom
-            ] * exchangeCurrencyMap[exchange].USD;
-            rates.push(usdInferredExchangeRate);
+            if (exchangeCurrencyMap[exchange].USD !== null
+              && usdExchangeRates[denom] !== null) {
+              const usdInferredExchangeRate = usdExchangeRates[denom
+              ] * exchangeCurrencyMap[exchange].USD;
+              rates.push(usdInferredExchangeRate);
+            }
           }
         } else {
           rates.push(exchangeCurrencyMap[exchange][denom]);

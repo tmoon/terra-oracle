@@ -2,17 +2,24 @@ const cron = require('node-cron');
 const pm2 = require('pm2');
 const chalk = require('chalk');
 
+const logger = require('./logger');
 const pm2Config = require('./../config/pm2.json');
 const CONSTANT = require('./../config/constant.json');
 
 const { fetchWithFallback } = require('./fetcher');
 const { submitVoteAsync } = require('./vote.js');
 
+function sleep(ms) {
+  logger.debug('sleep');
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 module.exports = {
   run: (options) => {
-    // console.log(options);
-    // console.log(process.cwd());
+    logger.debug(options);
+    logger.debug(process.cwd());
     if (options.interval === undefined) {
       throw Error('interval is necessary for run command');
       // Output with chalk
@@ -30,7 +37,7 @@ module.exports = {
     // # * * * * * *
 
     cron.schedule(`* */${options.interval} * * *`, async () => {
-      console.log(CONSTANT.CLI_CURRENCY_MAP);
+      logger.debug(CONSTANT.CLI_CURRENCY_MAP);
       const whiteListedCur = Object.keys(CONSTANT.CLI_CURRENCY_MAP);
       const res = await fetchWithFallback(whiteListedCur);
       let { result } = res;
@@ -38,10 +45,10 @@ module.exports = {
         result = {};
       }
       const currencyList = Object.keys(result);
-      console.log(result);
-      console.log(currencyList);
+      logger.info(result);
+      logger.info(currencyList);
       for (let i = 0; i < currencyList.length; i += 1) {
-        console.log('currency calling ', i);
+        // logger.debug('currency calling ', i);
         try {
           /* eslint-disable */
           const voteRes = await submitVoteAsync({
@@ -50,14 +57,15 @@ module.exports = {
             key: options.key,
             password: options.password,
           });
+          await sleep(5000);
           /* eslint-enable */
-          console.log('found res', voteRes);
+          logger.info(`denom: ${currencyList[i]} price: ${result[currencyList[i]]}`);
+          logger.info('found res', voteRes);
         } catch (error) {
-          console.log(chalk.red('Error occurred during submitting vote, ', error.message));
+          logger.error(chalk.red('Error occurred during submitting vote, ', error.message));
         }
       }
     });
-    console.log('done');
   },
   runDaemonPM2: (options) => {
     if (options.interval === undefined) {
@@ -86,10 +94,11 @@ module.exports = {
       }
 
       pm2.start(pm2Config, (err1, apps) => {
-        console.log(apps);
         pm2.disconnect();
         if (err1) {
-          console.log(chalk.red('Error in pm2 init. ', err));
+          console.log(chalk.red('Error in pm2 init. ', err, apps));
+        } else {
+          console.log('Successfully added daemon.');
         }
       });
     });
@@ -101,10 +110,11 @@ module.exports = {
       }
 
       pm2.delete('oracle-feeder', (err1, apps) => {
-        console.log(apps);
         pm2.disconnect();
         if (err1) {
-          console.log(chalk.red('Error in pm2 init. ', err));
+          console.log(chalk.red('Error in pm2 init. ', err, apps));
+        } else {
+          console.log('Successfylly removed daemon.');
         }
       });
     });
@@ -117,6 +127,6 @@ if (require.main === module) {
   }
   const args = process.argv.slice(2);
   const interval = Number(args[0]);
-  console.log(args, interval);
+  logger.debug(args);
   module.exports.run({ interval, key: args[1], password: args[2] });
 }

@@ -81,7 +81,7 @@ module.exports = {
   },
   
   submitVoteAsync: async (voteParam) => {
-    const error = InternalFunctions.checkVoteParams(voteParam);
+    const error = module.exports.checkVoteParams(voteParam);
 
     // if error is non-empty then something is wrong
     if (error) {
@@ -92,5 +92,19 @@ module.exports = {
     const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${voter.CHAIN_ID} -y`;
     const res = await execShellCommand(command);
     return res;
+  },
+
+  submitVote: (voteParam) => {
+    module.exports.submitVoteAsync(voteParam)
+      .then((result) => {
+        console.log(chalk.green('Successfully Voted!!', result));
+      })
+      .catch((err) => {
+        console.log(chalk.red(err));
+      });
+    return {
+      status: 'error',
+      message: 'Invalid State',
+    };
   },
 };

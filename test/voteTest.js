@@ -6,7 +6,7 @@ const voteInternal = rewire('../src/vote').__get__('InternalFunctions');
 /* eslint-enable */
 
 describe('Voting Tests', () => {
-  describe('#submitVote(voteParam)', () => {
+  describe('#checkVoteParams(voteParam)', () => {
     it('Should return error with error message about format', () => {
       const result = checkVoteParams({ denom: 'ust', price: 0.1, other: 'no' });
       assert.equal(result.status === 'error' && result.message === "Parameters don't match with standard format.", true);

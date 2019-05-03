@@ -42,7 +42,7 @@ module.exports = {
     } else if (options.command === 'fetch') {
       fetch(options);
     } else if (options.command === 'vote') {
-      submitVoteAsync(options);
+      submitVote(options);
     } else {
       console.log(chalk.red('Invalid format please check --help for available options.'));
     }

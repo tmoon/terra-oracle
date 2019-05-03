@@ -60,7 +60,7 @@ module.exports = {
           await sleep(5000);
           /* eslint-enable */
           logger.info(`denom: ${currencyList[i]} price: ${result[currencyList[i]]}`);
-          // logger.info('found res', voteRes);
+          logger.info('found res', voteRes);
         } catch (error) {
           logger.error(chalk.red('Error occurred during submitting vote, ', error.message));
         }

@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const { help } = require('./help');
 const { runDaemonPM2, removeDaemonPM2 } = require('./run');
 const { fetch } = require('./fetcher');
-const { submitVoteAsync } = require('./vote');
+const { submitVote } = require('./vote');
 
 
 function parseArgumentsIntoOptions(rawArgs) {

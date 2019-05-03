@@ -76,10 +76,10 @@ module.exports = {
         message: '"pw" flag is missing in command',
       };
     }
-    
+
     return false;
   },
-  
+
   submitVoteAsync: async (voteParam) => {
     const error = module.exports.checkVoteParams(voteParam);
 

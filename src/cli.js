@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const { help } = require('./help');
 const { runDaemonPM2, removeDaemonPM2 } = require('./run');
 const { fetch } = require('./fetcher');
-const { submitVote } = require('./vote');
+const { submitVoteAsync } = require('./vote');
 
 
 function parseArgumentsIntoOptions(rawArgs) {
@@ -42,7 +42,7 @@ module.exports = {
     } else if (options.command === 'fetch') {
       fetch(options);
     } else if (options.command === 'vote') {
-      submitVote(options);
+      submitVoteAsync(options);
     } else {
       console.log(chalk.red('Invalid format please check --help for available options.'));
     }

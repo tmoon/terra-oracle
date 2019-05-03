@@ -127,6 +127,6 @@ if (require.main === module) {
   }
   const args = process.argv.slice(2);
   const interval = Number(args[0]);
-  logger.debug(args);
+  // logger.debug(args);
   module.exports.run({ interval, key: args[1], password: args[2] });
 }

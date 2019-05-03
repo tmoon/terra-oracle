@@ -24,33 +24,33 @@ function execShellCommand(cmd) {
 }
 
 module.exports = {
-  submitVote: (voteParam) => {
+  checkVoteParams: (voteParam) => {
     if (Object.keys(voteParam).length < 4) {
-      console.log(chalk.red("Parameters doesn't match with standard format."));
+      console.log(chalk.red("Parameters don't match with standard format."));
       return {
         status: 'error',
-        message: "Parameters doesn't match with standard format.",
+        message: "Parameters don't match with standard format.",
       };
     }
     if (voteParam.denom === undefined) {
-      console.log(chalk.red('"denom" flag is missed in command'));
+      console.log(chalk.red('"denom" flag is missing in command'));
       return {
         status: 'error',
-        message: '"denom" flag is missed in command',
+        message: '"denom" flag is missing in command',
       };
     }
     if (CLI_CURRENCY_MAP[voteParam.denom] === undefined) {
-      console.log(chalk.red(`"${voteParam.denom}" is not listed into Whitelist`));
+      console.log(chalk.red(`"${voteParam.denom}" is not listed in whitelist`));
       return {
         status: 'error',
-        message: `"${voteParam.denom}" is not listed into Whitelist`,
+        message: `"${voteParam.denom}" is not listed in whitelist`,
       };
     }
     if (voteParam.price === undefined) {
-      console.log(chalk.red('"price" flag is missed in command'));
+      console.log(chalk.red('"price" flag is missing in command'));
       return {
         status: 'error',
-        message: '"price" flag is missed in command',
+        message: '"price" flag is missing in command',
       };
     }
     if (typeof (voteParam.price) !== 'number') {
@@ -62,20 +62,39 @@ module.exports = {
     }
 
     if (voteParam.key === undefined) {
-      console.log(chalk.red('"key" flag is missed in command'));
+      console.log(chalk.red('"key" flag is missing in command'));
       return {
         status: 'error',
-        message: '"key" flag is missed in command',
+        message: '"key" flag is missing in command',
       };
     }
 
     if (voteParam.password === undefined) {
-      console.log(chalk.red('"pw" flag is missed in command'));
+      console.log(chalk.red('"pw" flag is missing in command'));
       return {
         status: 'error',
-        message: '"pw" flag is missed in command',
+        message: '"pw" flag is missing in command',
       };
     }
+
+    return false;
+  },
+
+  submitVoteAsync: async (voteParam) => {
+    const error = module.exports.checkVoteParams(voteParam);
+
+    // if error is non-empty then something is wrong
+    if (error) {
+      return error;
+    }
+
+    const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
+    const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${voter.CHAIN_ID} -y`;
+    const res = await execShellCommand(command);
+    return res;
+  },
+
+  submitVote: (voteParam) => {
     module.exports.submitVoteAsync(voteParam)
       .then((result) => {
         console.log(chalk.green('Successfully Voted!!', result));
@@ -87,63 +106,5 @@ module.exports = {
       status: 'error',
       message: 'Invalid State',
     };
-  },
-  submitVoteAsync: async (voteParam) => {
-    if (Object.keys(voteParam).length < 4) {
-      console.log(chalk.red("Parameters doesn't match with standard format."));
-      return {
-        status: 'error',
-        message: "Parameters doesn't match with standard format.",
-      };
-    }
-    if (voteParam.denom === undefined) {
-      console.log(chalk.red('"denom" flag is missed in command'));
-      return {
-        status: 'error',
-        message: '"denom" flag is missed in command',
-      };
-    }
-    if (CLI_CURRENCY_MAP[voteParam.denom] === undefined) {
-      console.log(chalk.red(`"${voteParam.denom}" is not listed into Whitelist`));
-      return {
-        status: 'error',
-        message: `"${voteParam.denom}" is not listed into Whitelist`,
-      };
-    }
-    if (voteParam.price === undefined) {
-      console.log(chalk.red('"price" flag is missed in command'));
-      return {
-        status: 'error',
-        message: '"price" flag is missed in command',
-      };
-    }
-    if (typeof (voteParam.price) !== 'number') {
-      console.log(chalk.red('"price" must be a number'));
-      return {
-        status: 'error',
-        message: '"price" must be number',
-      };
-    }
-
-    if (voteParam.key === undefined) {
-      console.log(chalk.red('"key" flag is missed in command'));
-      return {
-        status: 'error',
-        message: '"key" flag is missed in command',
-      };
-    }
-
-    if (voteParam.password === undefined) {
-      console.log(chalk.red('"pw" flag is missed in command'));
-      return {
-        status: 'error',
-        message: '"pw" flag is missed in command',
-      };
-    }
-
-    const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
-    const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${voter.CHAIN_ID} -y`;
-    const res = await execShellCommand(command);
-    return res;
   },
 };

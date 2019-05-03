@@ -81,13 +81,6 @@ module.exports = {
   },
 
   submitVoteAsync: async (voteParam) => {
-    const error = module.exports.checkVoteParams(voteParam);
-
-    // if error is non-empty then something is wrong
-    if (error) {
-      return error;
-    }
-
     const microPrice = InternalFunctions.convertToMicroUnit(voteParam.price);
     const command = `echo ${voteParam.password} | terracli tx oracle vote --denom "${CLI_CURRENCY_MAP[voteParam.denom]}" --price "${microPrice}" --from ${voteParam.key} --chain-id ${voter.CHAIN_ID} -y`;
     const res = await execShellCommand(command);
@@ -95,6 +88,14 @@ module.exports = {
   },
 
   submitVote: (voteParam) => {
+    const error = module.exports.checkVoteParams(voteParam);
+
+    // if error is non-empty then something is wrong
+    if (error) {
+      return error;
+    }
+
+    // if safe to parse vote async and report tx hash or error 
     module.exports.submitVoteAsync(voteParam)
       .then((result) => {
         console.log(chalk.green('Successfully Voted!!', result));

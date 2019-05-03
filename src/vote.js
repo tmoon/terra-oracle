@@ -81,7 +81,6 @@ module.exports = {
   },
   
   submitVoteAsync: async (voteParam) => {
-    console.log('here', voteParam);
     const error = InternalFunctions.checkVoteParams(voteParam);
 
     // if error is non-empty then something is wrong

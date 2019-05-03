@@ -95,7 +95,7 @@ module.exports = {
       return error;
     }
 
-    // if safe to parse vote async and report tx hash or error 
+    // if safe to parse vote async and report tx hash or error
     module.exports.submitVoteAsync(voteParam)
       .then((result) => {
         console.log(chalk.green('Successfully Voted!!', result));

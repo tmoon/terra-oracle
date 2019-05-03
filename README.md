@@ -20,7 +20,7 @@ Oracle feeder is a robust tool that can
 1. Obviously one need to have `terrad` and `terracli` [installed](https://docs.terra.money/guide/installation) and running to vote
 2. In addition, make sure you have all the necessary node modules
 3. Then before testing/interacting with the CLI, one need to make sure `terracli` is running in either Dev or Prod setup
-4. Now change `src/voter.js` and put the correct `CHAIN_ID` there
+4. Now change `./config/voter.json` and put the correct `CHAIN_ID` there
 
 ### Dev Setup
 1. For Dev setup, one can follow the [local deployment setup](https://docs.terra.money/guide/deploy-testnet) for Terra with 1 local node

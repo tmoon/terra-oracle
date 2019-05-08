@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "arg": "^4.1.0",
-    "ccxt": "^1.18.497",
+    "ccxt": "^1.18.513",
     "chalk": "^2.4.2",
     "command-line-usage": "^5.0.5",
     "esm": "^3.2.22",

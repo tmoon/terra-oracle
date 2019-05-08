@@ -90,10 +90,10 @@ const InternalFunctions = {
   // Get crypto-fiat currency pairs for all the exchanges in specified denomination
   // To speed up the call, we pool promises for web api requests
   // and try to resolve all of them together
-  async getExchangeCurrencyMap(excahnges, denoms) {
+  async getExchangeCurrencyMap(exchanges, denoms) {
     const ratePromises = [];
-    for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
-      const exchange = excahnges[excahngesIdx];
+    for (let exchangeIdx = 0; exchangeIdx < exchanges.length; exchangeIdx += 1) {
+      const exchange = exchanges[exchangeIdx];
       for (let denomsIdx = 0; denomsIdx < denoms.length; denomsIdx += 1) {
         const denom = denoms[denomsIdx];
         ratePromises.push(InternalFunctions.getRateByExchange(exchange, denom));
@@ -104,8 +104,8 @@ const InternalFunctions = {
     const rateResults = await Promise.all(ratePromises);
     const exchangeCurrencyMap = {};
 
-    for (let excahngesIdx = 0; excahngesIdx < excahnges.length; excahngesIdx += 1) {
-      const exchange = excahnges[excahngesIdx];
+    for (let exchangesIdx = 0; exchangesIdx < exchanges.length; exchangesIdx += 1) {
+      const exchange = exchanges[exchangesIdx];
       exchangeCurrencyMap[exchange] = {};
     }
 

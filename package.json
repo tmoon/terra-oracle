@@ -40,6 +40,6 @@
     "eslint-plugin-only-warn": "^1.0.1",
     "mocha": "^6.1.4",
     "rewire": "^4.0.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
